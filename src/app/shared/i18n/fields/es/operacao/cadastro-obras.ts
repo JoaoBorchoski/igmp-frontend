@@ -1,0 +1,30 @@
+export const cadastroObrasFields = {
+  list: {
+    nome: 'Nome',
+    cnpj: 'CNPJ',
+    endereco: 'Endereço',
+    responsavelObra: 'Responsável Obra',
+    contato: 'Contato',
+    tipoObra: 'Tipo Obra (Casa/Prédio)',
+  },
+  form: {
+    nome: 'Nome',
+    cnpj: 'CNPJ',
+    endereco: 'Endereço',
+    responsavelObra: 'Responsável Obra',
+    contato: 'Contato',
+    previsaoEntrega: 'Previsão Entrega',
+    tipoObra: 'Tipo Obra (Casa/Prédio)',
+    plantasIguais: 'Plantas Iguais?',
+    qtdCasas: 'Quantidade Casas',
+    grupoCasas: 'Grupos de Casas',
+    estruturaPredio: 'Estrutura (Torre/Bloco)',
+    qtdAptoPorAndar: 'Qtde Apto/Andar',
+    andares: 'Andares',
+    qtdAptos: 'Qtde Aptos',
+    grupoAndares: 'Grupo de Andares',
+    padraoCorId: 'Padrão Cor',
+    solidaMadeirada: 'Sólida/Madeirada',
+    coresTiposId: 'Cores/Tipos',
+  }
+}

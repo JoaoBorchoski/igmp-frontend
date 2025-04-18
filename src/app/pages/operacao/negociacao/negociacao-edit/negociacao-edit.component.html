@@ -1,0 +1,128 @@
+<po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
+  <form [formGroup]="negociacaoForm">
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="medicaoId"
+        name="medicaoId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="medicaoIdService"
+        [p-label]="this.literals.fields.form['medicaoId']"
+        p-required
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="clienteId"
+        name="clienteId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="clienteIdService"
+        [p-label]="this.literals.fields.form['clienteId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="statusNegociacaoId"
+        name="statusNegociacaoId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="statusNegociacaoIdService"
+        [p-label]="this.literals.fields.form['statusNegociacaoId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="funcionarioId"
+        name="funcionarioId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="funcionarioIdService"
+        [p-label]="this.literals.fields.form['funcionarioId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-datepicker
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="dataCriacao"
+        name="dataCriacao"
+        p-clean
+        [p-label]="this.literals.fields.form['dataCriacao']"
+        [p-readonly]="readonly"
+      >
+      </po-datepicker>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-datepicker
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="dataFechamento"
+        name="dataFechamento"
+        p-clean
+        [p-label]="this.literals.fields.form['dataFechamento']"
+        [p-readonly]="readonly"
+      >
+      </po-datepicker>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <!-- <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="valorEstimado"
+        name="valorEstimado"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="valorEstimadoService"
+        [p-label]="this.literals.fields.form['valorEstimado']"
+      > </po-combo> -->
+
+      <po-decimal
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="valorEstimado"
+        name="valorEstimado"
+        p-clean
+        [p-label]="this.literals.fields.form['valorEstimado']"
+        [p-readonly]="readonly"
+        p-decimals-length="2"
+      ></po-decimal>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="descricao"
+        name="descricao"
+        p-clean
+        [p-label]="this.literals.fields.form['descricao']"
+        p-maxlength="255"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="motivoPerda"
+        name="motivoPerda"
+        p-clean
+        [p-label]="this.literals.fields.form['motivoPerda']"
+        p-maxlength="255"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+  </form>
+</po-page-default>

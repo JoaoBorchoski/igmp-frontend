@@ -1,0 +1,30 @@
+<po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
+  <form [formGroup]="pacoteForm">
+    <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="pedidoId"
+        name="pedidoId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="pedidoIdService"
+        [p-label]="this.literals.fields.form['pedidoId']"
+        p-required
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="descricao"
+        name="descricao"
+        p-clean
+        [p-label]="this.literals.fields.form['descricao']"
+        p-maxlength="255"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+  </form>
+</po-page-default>

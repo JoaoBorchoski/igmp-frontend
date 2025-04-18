@@ -1,0 +1,277 @@
+<po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
+  <form [formGroup]="cadastroObraForm">
+    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="nome"
+        name="nome"
+        p-clean
+        [p-label]="this.literals.fields.form['nome']"
+        p-maxlength="100"
+        [p-readonly]="readonly"
+        p-required
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-lookup
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="cliente"
+        name="cliente"
+        p-field-label="label"
+        p-field-value="value"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="clienteIdService"
+        [p-label]="this.literals.fields.form['cliente']"
+        p-required
+        [p-columns]="columnsFornecedor"
+        (p-change)="onChangeCliente($event)"
+      >
+      </po-lookup>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="cnpj"
+        name="cnpj"
+        p-clean
+        [p-label]="this.literals.fields.form['cnpj']"
+        p-maxlength="14"
+        [p-readonly]="readonly"
+        p-required
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="contato"
+        name="contato"
+        p-clean
+        [p-label]="this.literals.fields.form['contato']"
+        p-maxlength="20"
+        [p-readonly]="readonly"
+        p-required
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="endereco"
+        name="endereco"
+        p-clean
+        [p-label]="this.literals.fields.form['endereco']"
+        p-maxlength="255"
+        [p-readonly]="readonly"
+        p-required
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="responsavelObra"
+        name="responsavelObra"
+        p-clean
+        [p-label]="this.literals.fields.form['responsavelObra']"
+        p-maxlength="100"
+        [p-readonly]="readonly"
+        p-required
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-datepicker
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="previsaoEntrega"
+        name="previsaoEntrega"
+        p-clean
+        [p-label]="this.literals.fields.form['previsaoEntrega']"
+        [p-readonly]="readonly"
+      >
+      </po-datepicker>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-select
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="tipoObra"
+        name="tipoObra"
+        [p-disabled]="readonly"
+        [p-label]="this.literals.fields.form['tipoObra']"
+        [p-options]="tipoObraOptions"
+        [p-readonly]="readonly"
+        [p-required]="true"
+      >
+      </po-select>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-lookup
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="padraoCorId"
+        name="padraoCorId"
+        p-field-label="label"
+        p-field-value="value"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="padraoCorIdService"
+        [p-label]="this.literals.fields.form['padraoCorId']"
+        p-required
+        [p-columns]="columnsFornecedor"
+      >
+      </po-lookup>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding po-required">
+      <po-select
+        class="po-sm-12 po-md-12 po-lg-6 po-xl-6"
+        formControlName="solidaMadeirada"
+        name="solidaMadeirada"
+        [p-disabled]="readonly"
+        [p-label]="this.literals.fields.form['solidaMadeirada']"
+        [p-options]="solidaMadeiradaOptions"
+        [p-readonly]="readonly"
+        [p-required]="true"
+      >
+      </po-select>
+    </div>
+
+    <div *ngIf="cadastroObraForm.get('tipoObra').value == 'Prédio'">
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <po-select
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="plantasIguais"
+          name="plantasIguais"
+          [p-disabled]="readonly"
+          [p-label]="this.literals.fields.form['plantasIguais']"
+          [p-options]="plantasIguaisOptions"
+          [p-readonly]="readonly"
+        >
+        </po-select>
+      </div>
+
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <po-number
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="qtdCasas"
+          name="qtdCasas"
+          p-clean
+          [p-label]="this.literals.fields.form['qtdCasas']"
+          p-maxlength="3"
+          [p-readonly]="readonly"
+        >
+        </po-number>
+      </div>
+
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <po-input
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="grupoCasas"
+          name="grupoCasas"
+          p-clean
+          [p-label]="this.literals.fields.form['grupoCasas']"
+          p-maxlength="50"
+          [p-readonly]="readonly"
+        >
+        </po-input>
+      </div>
+
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <!-- <po-input
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="estruturaPredio"
+          name="estruturaPredio"
+          p-clean
+          [p-label]="this.literals.fields.form['estruturaPredio']"
+          p-maxlength="10"
+          [p-readonly]="readonly"
+        >
+        </po-input> -->
+
+        <po-select
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="estruturaPredio"
+          name="estruturaPredio"
+          [p-disabled]="readonly"
+          [p-label]="this.literals.fields.form['estruturaPredio']"
+          [p-options]="estruturaPredioOptions"
+          [p-readonly]="readonly"
+        >
+        </po-select>
+      </div>
+
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <po-number
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="qtdAptoPorAndar"
+          name="qtdAptoPorAndar"
+          p-clean
+          [p-label]="this.literals.fields.form['qtdAptoPorAndar']"
+          p-maxlength="3"
+          [p-readonly]="readonly"
+        >
+        </po-number>
+      </div>
+
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <po-number
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="andares"
+          name="andares"
+          p-clean
+          [p-label]="this.literals.fields.form['andares']"
+          p-maxlength="3"
+          [p-readonly]="readonly"
+        >
+        </po-number>
+      </div>
+
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <po-number
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="qtdAptos"
+          name="qtdAptos"
+          p-clean
+          [p-label]="this.literals.fields.form['qtdAptos']"
+          p-maxlength="3"
+          [p-readonly]="readonly"
+        >
+        </po-number>
+      </div>
+
+      <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+        <po-input
+          class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+          formControlName="grupoAndares"
+          name="grupoAndares"
+          p-clean
+          [p-label]="this.literals.fields.form['grupoAndares']"
+          p-maxlength="50"
+          [p-readonly]="readonly"
+        >
+        </po-input>
+      </div>
+    </div>
+
+    <!-- <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="coresTiposId"
+        name="coresTiposId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="coresTiposIdService"
+        [p-label]="this.literals.fields.form['coresTiposId']"
+      > </po-combo>
+    </div> -->
+  </form>
+</po-page-default>

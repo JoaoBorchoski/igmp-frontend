@@ -1,0 +1,172 @@
+<po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
+  <form [formGroup]="medicaoForm">
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <!-- <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="obraId"
+        name="obraId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="obraIdService"
+        [p-label]="this.literals.fields.form['obraId']"
+        p-required
+      > </po-combo> -->
+
+      <po-lookup
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="cadastroObraId"
+        name="cadastroObraId"
+        p-field-label="label"
+        p-field-value="value"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="obraIdService"
+        [p-label]="this.literals.fields.form['obraId']"
+        p-required
+        [p-columns]="columnsFornecedor"
+      >
+      </po-lookup>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="complemento"
+        name="complemento"
+        p-clean
+        [p-label]="this.literals.fields.form['complemento']"
+        p-maxlength="255"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="espessuraParede"
+        name="espessuraParede"
+        p-clean
+        [p-label]="this.literals.fields.form['espessuraParede']"
+        p-maxlength="50"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="larguraVaosId"
+        name="larguraVaosId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="larguraVaosIdService"
+        [p-label]="this.literals.fields.form['larguraVaosId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="alturaVaosId"
+        name="alturaVaosId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="alturaVaosIdService"
+        [p-label]="this.literals.fields.form['alturaVaosId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="tipoEnchimentoId"
+        name="tipoEnchimentoId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="tipoEnchimentoIdService"
+        [p-label]="this.literals.fields.form['tipoEnchimentoId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="tipoPortaId"
+        name="tipoPortaId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="tipoPortaIdService"
+        [p-label]="this.literals.fields.form['tipoPortaId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+      <po-checkbox
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 checkbox-header"
+        formControlName="confirmacao"
+        name="confirmacao"
+        [p-disabled]="readonly"
+        [p-label]="this.literals.fields.form['confirmacao']"
+      >
+      </po-checkbox>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="complementoOrigemId"
+        name="complementoOrigemId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="complementoOrigemIdService"
+        [p-label]="this.literals.fields.form['complementoOrigemId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="sentidoAberturaId"
+        name="sentidoAberturaId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="sentidoAberturaIdService"
+        [p-label]="this.literals.fields.form['sentidoAberturaId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="alizarId"
+        name="alizarId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="alizarIdService"
+        [p-label]="this.literals.fields.form['alizarId']"
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="fechaduraId"
+        name="fechaduraId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="fechaduraIdService"
+        [p-label]="this.literals.fields.form['fechaduraId']"
+      >
+      </po-combo>
+    </div>
+  </form>
+</po-page-default>

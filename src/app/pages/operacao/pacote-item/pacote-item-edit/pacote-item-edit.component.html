@@ -1,0 +1,42 @@
+<po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
+  <form [formGroup]="pacoteItemForm">
+    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-6 po-xl-3 po-required"
+        formControlName="pacoteId"
+        name="pacoteId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="pacoteIdService"
+        [p-label]="this.literals.fields.form['pacoteId']"
+        p-required
+      > </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-4 po-lg-4 po-xl-4 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="produto"
+        name="produto"
+        p-clean
+        [p-label]="this.literals.fields.form['produto']"
+        p-maxlength="256"
+        [p-readonly]="readonly"
+        p-required
+      > </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+      <po-number
+        class="po-sm-12 po-md-8 po-lg-2 po-xl-2"
+        formControlName="quantidade"
+        name="quantidade"
+        p-clean
+        [p-label]="this.literals.fields.form['quantidade']"
+        p-maxlength="10"
+        [p-readonly]="readonly"
+      > </po-number>
+    </div>
+
+  </form>
+</po-page-default>

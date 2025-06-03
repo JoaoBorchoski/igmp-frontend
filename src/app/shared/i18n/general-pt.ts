@@ -243,7 +243,7 @@ export const generalPt = {
     fields: pedidosFields,
   },
   operacao_pedidoItem: {
-    title: "Pedidos Items",
+    title: "Orçamentos",
     fields: pedidosItemsFields,
   },
   operacao_pacote: {
@@ -251,7 +251,7 @@ export const generalPt = {
     fields: pacotesFields,
   },
   operacao_pacoteItem: {
-    title: "Pacotes Items",
+    title: "Produtos",
     fields: pacotesItemsFields,
   },
   operacao_cadastroObra: {

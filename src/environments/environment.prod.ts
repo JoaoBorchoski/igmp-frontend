@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
-  baseUrl: "http://localhost:3333",
-  poNotificationDuration: 4000
+    production: true,
+    baseUrl: "https://api.igmp.com.br",
+    poNotificationDuration: 4000,
 }

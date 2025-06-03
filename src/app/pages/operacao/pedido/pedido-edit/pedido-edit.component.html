@@ -1,18 +1,5 @@
 <po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
   <form [formGroup]="pedidoForm">
-    <!-- <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-      <po-number
-        class="po-sm-12 po-md-8 po-lg-2 po-xl-2 po-required"
-        formControlName="sequencial"
-        name="sequencial"
-        p-clean
-        [p-label]="this.literals.fields.form['sequencial']"
-        p-maxlength="10"
-        [p-readonly]="readonly"
-        p-required
-      > </po-number>
-    </div> -->
-
     <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
       <po-lookup
         class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
@@ -136,19 +123,6 @@
       >
       </po-combo>
     </div>
-
-    <!-- <div class="po-sm-12 po-md-3 po-lg-3 po-xl-3 no-padding">
-      <po-input
-        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
-        formControlName="status"
-        name="status"
-        p-clean
-        [p-label]="this.literals.fields.form['status']"
-        p-maxlength="100"
-        [p-readonly]="readonly"
-      >
-      </po-input>
-    </div> -->
 
     <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
       <po-lookup

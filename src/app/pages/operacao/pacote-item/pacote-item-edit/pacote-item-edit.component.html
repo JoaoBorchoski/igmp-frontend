@@ -1,42 +1,166 @@
 <po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
-  <form [formGroup]="pacoteItemForm">
-    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-      <po-combo
-        class="po-sm-12 po-md-12 po-lg-6 po-xl-3 po-required"
-        formControlName="pacoteId"
-        name="pacoteId"
-        p-clean
-        [p-disabled]="readonly"
-        [p-filter-service]="pacoteIdService"
-        [p-label]="this.literals.fields.form['pacoteId']"
-        p-required
-      > </po-combo>
-    </div>
+    <form [formGroup]="pacoteItemForm">
+        <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding">
+            <po-input
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                formControlName="nome"
+                name="nome"
+                p-clean
+                [p-label]="this.literals.fields.form['nome']"
+                p-required
+            >
+            </po-input>
+        </div>
 
-    <div class="po-sm-12 po-md-4 po-lg-4 po-xl-4 no-padding">
-      <po-input
-        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
-        formControlName="produto"
-        name="produto"
-        p-clean
-        [p-label]="this.literals.fields.form['produto']"
-        p-maxlength="256"
-        [p-readonly]="readonly"
-        p-required
-      > </po-input>
-    </div>
+        <div class="po-sm-12 po-md-12 po-lg-9 po-xl-9 no-padding">
+            <po-input
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                formControlName="descricao"
+                name="descricao"
+                p-clean
+                [p-label]="this.literals.fields.form['descricao']"
+                p-required
+            >
+            </po-input>
+        </div>
 
-    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-      <po-number
-        class="po-sm-12 po-md-8 po-lg-2 po-xl-2"
-        formControlName="quantidade"
-        name="quantidade"
-        p-clean
-        [p-label]="this.literals.fields.form['quantidade']"
-        p-maxlength="10"
-        [p-readonly]="readonly"
-      > </po-number>
-    </div>
+        <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+            <po-select
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                formControlName="tipo"
+                name="tipo"
+                p-label="{{ literals.fields.form['tipo'] }}"
+                [p-options]="tipoOptions"
+                p-placeholder="Selecione"
+                (p-change)="onTipoChange($event)"
+            ></po-select>
+        </div>
 
-  </form>
+        <div *ngIf="this.pacoteItemForm.controls.tipo.value == 1">
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-lookup
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                    formControlName="sentidoAbertura"
+                    name="sentidoAbertura"
+                    p-field-label="label"
+                    p-field-value="value"
+                    p-clean
+                    [p-disabled]="readonly"
+                    [p-filter-service]="sentidoAberturaIdService"
+                    [p-label]="this.literals.fields.form['sentidoAbertura']"
+                    [p-columns]="columnsFornecedor"
+                >
+                </po-lookup>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-lookup
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                    formControlName="tipoPorta"
+                    name="tipoPorta"
+                    p-field-label="label"
+                    p-field-value="value"
+                    p-clean
+                    [p-disabled]="readonly"
+                    [p-filter-service]="tipoPortaIdService"
+                    [p-label]="this.literals.fields.form['tipoPorta']"
+                    [p-columns]="columnsFornecedor"
+                >
+                </po-lookup>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-lookup
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                    formControlName="tipoEnchimento"
+                    name="tipoEnchimento"
+                    p-field-label="label"
+                    p-field-value="value"
+                    p-clean
+                    [p-disabled]="readonly"
+                    [p-filter-service]="tipoEnchimentoIdService"
+                    [p-label]="this.literals.fields.form['tipoEnchimento']"
+                    [p-columns]="columnsFornecedor"
+                >
+                </po-lookup>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-lookup
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                    formControlName="fechadura"
+                    name="fechadura"
+                    p-field-label="label"
+                    p-field-value="value"
+                    p-clean
+                    [p-disabled]="readonly"
+                    [p-filter-service]="fechaduraIdService"
+                    [p-label]="this.literals.fields.form['fechadura']"
+                    p-required
+                    [p-columns]="columnsFornecedor"
+                >
+                </po-lookup>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-decimal
+                    p-decimals-length="2"
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="alturaPorta"
+                    name="alturaPorta"
+                    p-clean
+                    [p-label]="this.literals.fields.form['alturaPorta']"
+                >
+                </po-decimal>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-decimal
+                    p-decimals-length="2"
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="larguraPorta"
+                    name="larguraPorta"
+                    p-clean
+                    [p-label]="this.literals.fields.form['larguraPorta']"
+                >
+                </po-decimal>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-decimal
+                    p-decimals-length="2"
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="espessuraPorta"
+                    name="espessuraPorta"
+                    p-clean
+                    [p-label]="this.literals.fields.form['espessuraPorta']"
+                >
+                </po-decimal>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-decimal
+                    p-decimals-length="2"
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="larguraBatatente"
+                    name="larguraBatatente"
+                    p-clean
+                    [p-label]="this.literals.fields.form['larguraBatatente']"
+                >
+                </po-decimal>
+            </div>
+
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-decimal
+                    p-decimals-length="2"
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="espessuraCanalAlizar"
+                    name="espessuraCanalAlizar"
+                    p-clean
+                    [p-label]="this.literals.fields.form['espessuraCanalAlizar']"
+                >
+                </po-decimal>
+            </div>
+        </div>
+    </form>
 </po-page-default>

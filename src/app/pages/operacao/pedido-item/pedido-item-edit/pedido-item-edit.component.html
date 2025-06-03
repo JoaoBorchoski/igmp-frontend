@@ -1,6 +1,150 @@
 <po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
   <form [formGroup]="pedidoItemForm">
-    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+    <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+      <po-lookup
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="cliente"
+        name="cliente"
+        p-field-label="label"
+        p-field-value="value"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="clienteIdService"
+        [p-label]="this.literals.fields.form['cliente']"
+        p-required
+        [p-columns]="columnsFornecedor"
+        (p-change)="clienteIdChange($event)"
+      >
+      </po-lookup>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="telefone"
+        name="telefone"
+        p-clean
+        [p-label]="this.literals.fields.form['telefone']"
+        p-maxlength="100"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="cep"
+        name="cep"
+        p-clean
+        [p-label]="this.literals.fields.form['cep']"
+        p-maxlength="10"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-4 po-xl-4 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="endereco"
+        name="endereco"
+        p-clean
+        [p-label]="this.literals.fields.form['endereco']"
+        p-maxlength="100"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-2 po-lg-2 po-xl-2 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="numero"
+        name="numero"
+        p-clean
+        [p-label]="this.literals.fields.form['numero']"
+        p-maxlength="10"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-4 po-xl-4 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="complemento"
+        name="complemento"
+        p-clean
+        [p-label]="this.literals.fields.form['complemento']"
+        p-maxlength="100"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-2 po-lg-2 po-xl-2 no-padding">
+      <po-input
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+        formControlName="bairro"
+        name="bairro"
+        p-clean
+        [p-label]="this.literals.fields.form['bairro']"
+        p-maxlength="100"
+        [p-readonly]="readonly"
+      >
+      </po-input>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-4 po-xl-4 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="estadoId"
+        name="estadoId"
+        (p-change)="estadoIdChange($event)"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="estadoIdService"
+        [p-label]="this.literals.fields.form['estadoId']"
+        p-required
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-4 po-xl-4 no-padding">
+      <po-combo
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="cidadeId"
+        name="cidadeId"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="cidadeIdService"
+        [p-label]="this.literals.fields.form['cidadeId']"
+        p-required
+      >
+      </po-combo>
+    </div>
+
+    <div class="po-sm-12 po-md-12 po-lg-4 po-xl-4 no-padding">
+      <po-lookup
+        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+        formControlName="status"
+        name="status"
+        p-field-label="label"
+        p-field-value="value"
+        p-clean
+        [p-disabled]="readonly"
+        [p-filter-service]="statusIdService"
+        [p-label]="this.literals.fields.form['status']"
+        p-required
+        [p-columns]="columnsFornecedor"
+      >
+      </po-lookup>
+    </div>
+
+    <po-divider class="po-sm-12 po-md-12 po-lg-12 po-xl-12" p-label="Items"> </po-divider>
+
+    <!-- <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
       <po-combo
         class="po-sm-12 po-md-12 po-lg-6 po-xl-3 po-required"
         formControlName="pedidoId"
@@ -10,7 +154,8 @@
         [p-filter-service]="pedidoIdService"
         [p-label]="this.literals.fields.form['pedidoId']"
         p-required
-      > </po-combo>
+      >
+      </po-combo>
     </div>
 
     <div class="po-sm-12 po-md-4 po-lg-4 po-xl-4 no-padding">
@@ -23,7 +168,8 @@
         p-maxlength="256"
         [p-readonly]="readonly"
         p-required
-      > </po-input>
+      >
+      </po-input>
     </div>
 
     <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
@@ -35,20 +181,21 @@
         [p-label]="this.literals.fields.form['quantidade']"
         p-maxlength="10"
         [p-readonly]="readonly"
-      > </po-number>
+      >
+      </po-number>
     </div>
 
     <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
       <po-input
-        class="po-sm-12 po-md-12 po-lg-6 po-xl-6"
+        class="po-sm-12 po-md-12 po-lg-3 po-xl-3"
         formControlName="corEtiqueta"
         name="corEtiqueta"
         p-clean
         [p-label]="this.literals.fields.form['corEtiqueta']"
         p-maxlength="255"
         [p-readonly]="readonly"
-      > </po-input>
-    </div>
-
+      >
+      </po-input>
+    </div> -->
   </form>
 </po-page-default>

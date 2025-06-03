@@ -1,11 +1,26 @@
 export const pacotesItemsFields = {
-  list: {
-    pacoteId: 'Pedido',
-    quantidade: 'Quantidade',
-  },
-  form: {
-    pacoteId: 'Pedido',
-    produto: 'Produto',
-    quantidade: 'Quantidade',
-  }
+    list: {
+        pacoteId: "Pedido",
+        quantidade: "Quantidade",
+        nome: "Codigo",
+        descricao: "Descrição",
+        tipo: "Tipo",
+    },
+    form: {
+        pacoteId: "Pedido",
+        produto: "Produto",
+        quantidade: "Quantidade",
+        nome: "Codigo",
+        descricao: "Descrição",
+        tipo: "Tipo",
+        sentidoAbertura: "Sentido Abertura",
+        tipoPorta: "Tipo Porta",
+        tipoEnchimento: "Tipo Enchimento",
+        fechadura: "Fechadura",
+        alturaPorta: "Altura Porta",
+        larguraPorta: "Largura Porta",
+        espessuraPorta: "Espessura Porta",
+        larguraBatatente: "Largura Batatente",
+        espessuraCanalAlizar: "Espessura Canal Alizar",
+    },
 }

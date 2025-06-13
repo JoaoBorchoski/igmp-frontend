@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing"
+import { ImportExcelModalComponent } from "./import-excel-modal-component"
 
 describe("ImportExcelModalComponent", () => {
   let component: ImportExcelModalComponent

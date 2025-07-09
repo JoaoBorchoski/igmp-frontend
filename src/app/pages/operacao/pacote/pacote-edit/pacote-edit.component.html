@@ -1,30 +1,244 @@
 <po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
-  <form [formGroup]="pacoteForm">
-    <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding">
-      <po-combo
-        class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
-        formControlName="pedidoId"
-        name="pedidoId"
-        p-clean
-        [p-disabled]="readonly"
-        [p-filter-service]="pedidoIdService"
-        [p-label]="this.literals.fields.form['pedidoId']"
-        p-required
-      >
-      </po-combo>
+    <form [formGroup]="pacoteForm">
+        <div>
+            <po-select
+                class="po-sm-12 po-md-3 po-lg-3 po-xl-3 no-padding"
+                formControlName="pacoteTipo"
+                name="pacoteTipo"
+                p-label="Tipo do Pacote"
+                [p-options]="pacoteTipos"
+                p-placeholder="Selecione"
+                (p-change)="onChangePacoteTipo($event)"
+            >
+            </po-select>
+        </div>
+
+        <div class="po-sm-12 po-md-3 po-lg-3 po-xl-3 no-padding">
+            <po-input
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                formControlName="descricao"
+                name="descricao"
+                p-label="{{ literals.fields.form['descricao'] }}"
+                p-maxlength="100"
+                [p-readonly]="readonly"
+            >
+            </po-input>
+        </div>
+    </form>
+
+    <div *ngIf="this.pacoteForm.get('pacoteTipo').value == 0">
+        <form [formGroup]="pacoteForm">
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-lookup
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                    formControlName="pedidoId"
+                    name="pedidoId"
+                    p-field-label="label"
+                    p-field-value="value"
+                    p-clean
+                    [p-disabled]="pacoteForm.get('pacoteItems').value.length > 0 || readonly"
+                    [p-filter-service]="pedidoIdService"
+                    [p-label]="this.literals.fields.form['pedidoId']"
+                    p-required
+                    [p-columns]="columnsFornecedor"
+                >
+                </po-lookup>
+            </div>
+        </form>
+
+        <form [formGroup]="pacoteItemsForm">
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-lookup
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                    formControlName="id"
+                    name="id"
+                    p-field-label="label"
+                    p-field-value="value"
+                    p-clean
+                    [p-disabled]="!pacoteForm.get('pedidoId').value || readonly"
+                    [p-filter-service]="pedidoItemsIdService"
+                    [p-label]="this.literals.fields.form['produto']"
+                    p-required
+                    [p-columns]="columnsFornecedor"
+                    [p-filter-params]="{ pedidoId: pacoteForm.get('pedidoId').value }"
+                >
+                </po-lookup>
+            </div>
+
+            <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding po-required">
+                <po-number
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="quantidade"
+                    name="quantidade"
+                    p-label="{{ literals.fields.form['quantidade'] }}"
+                    p-min="1"
+                    p-required
+                    [p-disabled]="!pacoteItemsForm.get('id').value || readonly"
+                >
+                </po-number>
+            </div>
+
+            <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding po-mt-4">
+                <po-button
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    p-label="Adicionar"
+                    p-kind="primary"
+                    (p-click)="addItem()"
+                    [p-disabled]="!pacoteItemsForm.get('quantidade').value || readonly"
+                >
+                </po-button>
+            </div>
+
+            <po-divider class="po-sm-12 po-md-12 po-lg-12 po-xl-12" p-label="Items do Pacote"></po-divider>
+
+            <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+                <po-table
+                    #table
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    [p-columns]="columnsTableItems"
+                    [p-items]="pacoteForm.get('pacoteItems').value"
+                    p-action-add
+                    p-action-remove
+                    [p-actions]="tableActions"
+                    p-actions-right="true"
+                >
+                </po-table>
+            </div>
+        </form>
     </div>
 
-    <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding">
-      <po-input
-        class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
-        formControlName="descricao"
-        name="descricao"
-        p-clean
-        [p-label]="this.literals.fields.form['descricao']"
-        p-maxlength="255"
-        [p-readonly]="readonly"
-      >
-      </po-input>
+    <div *ngIf="this.pacoteForm.get('pacoteTipo').value == 1">
+        <form [formGroup]="pacoteItemsForm">
+            <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+                <po-lookup
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                    formControlName="id"
+                    name="id"
+                    p-field-label="label"
+                    p-field-value="value"
+                    p-clean
+                    [p-filter-service]="produtoIdService"
+                    [p-label]="this.literals.fields.form['produto']"
+                    p-required
+                    [p-columns]="columnsProduto"
+                >
+                </po-lookup>
+            </div>
+
+            <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding po-required">
+                <po-number
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="quantidade"
+                    name="quantidade"
+                    p-label="{{ literals.fields.form['quantidade'] }}"
+                    p-min="1"
+                    p-required
+                    [p-disabled]="!pacoteItemsForm.get('id').value || readonly"
+                >
+                </po-number>
+            </div>
+
+            <div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding po-mt-4">
+                <po-button
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    p-label="Adicionar"
+                    p-kind="primary"
+                    (p-click)="addItem()"
+                    [p-disabled]="!pacoteItemsForm.get('quantidade').value || readonly"
+                >
+                </po-button>
+            </div>
+
+            <po-divider class="po-sm-12 po-md-12 po-lg-12 po-xl-12" p-label="Items do Pacote"></po-divider>
+
+            <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+                <po-table
+                    #table
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    [p-columns]="columnsTableItems"
+                    [p-items]="pacoteForm.get('pacoteItems').value"
+                    p-action-add
+                    p-action-remove
+                    [p-actions]="tableActions"
+                    p-actions-right="true"
+                >
+                </po-table>
+            </div>
+        </form>
     </div>
-  </form>
 </po-page-default>
+
+<po-modal
+    #poModal
+    p-size="lg"
+    p-hide-close="true"
+    [p-primary-action]="primaryAction"
+    [p-secondary-action]="secondaryAction"
+    p-title="Editar Produto"
+    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding"
+>
+    <form [formGroup]="pacoteItemsFormEdit" class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+        <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+            <po-lookup
+                *ngIf="pacoteForm.get('pacoteTipo').value == 0"
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                formControlName="id"
+                name="id"
+                p-field-label="label"
+                p-field-value="value"
+                p-disabled="true"
+                [p-filter-service]="pedidoItemsIdService"
+                [p-label]="this.literals.fields.form['produto']"
+                p-required
+                [p-columns]="columnsFornecedor"
+                [p-filter-params]="{ pedidoId: pacoteForm.get('pedidoId').value }"
+            >
+            </po-lookup>
+
+            <po-lookup
+                *ngIf="pacoteForm.get('pacoteTipo').value == 1"
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                formControlName="id"
+                name="id"
+                p-field-label="label"
+                p-field-value="value"
+                p-clean
+                [p-filter-service]="produtoIdService"
+                [p-label]="this.literals.fields.form['produto']"
+                p-required
+                [p-columns]="columnsProduto"
+                p-disabled="true"
+            >
+            </po-lookup>
+        </div>
+
+        <div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
+            <po-number
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                formControlName="quantidade"
+                name="quantidade"
+                p-clean
+                [p-label]="this.literals.fields.form['quantidade']"
+                p-maxlength="10"
+                [p-readonly]="readonly"
+                p-required
+            >
+            </po-number>
+        </div>
+    </form>
+</po-modal>
+
+<po-modal
+    #poModalDelete
+    p-size="lg"
+    p-hide-close="true"
+    [p-primary-action]="primaryActionDelete"
+    [p-secondary-action]="secondaryActionDelete"
+    p-title="Confirmar Exclusão"
+    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding"
+>
+    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 text-center">
+        <h1>Você tem certeza que deseja excluir este item?</h1>
+        <p class="po-mt-4">{{ this.deleteItemName }}</p>
+    </div>
+</po-modal>

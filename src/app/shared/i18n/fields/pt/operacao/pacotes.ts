@@ -3,6 +3,7 @@ export const pacotesFields = {
         pedidoSequencial: "Pedido",
         pedidoId: "Pedido",
         descricao: "Descrição",
+        sequencial: "Sequencial",
     },
     form: {
         pedidoId: "Pedido",

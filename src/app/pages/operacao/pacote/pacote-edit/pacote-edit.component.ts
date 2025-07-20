@@ -70,7 +70,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
         pedidoId: null,
         descricao: "",
         pacoteItems: this.formBuilder.array([]),
-        pacoteTipo: 1,
+        pacoteTipo: 0,
     })
 
     pacoteItemsForm = this.formBuilder.group({

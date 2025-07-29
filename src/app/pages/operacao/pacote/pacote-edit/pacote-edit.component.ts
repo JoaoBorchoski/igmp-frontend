@@ -197,6 +197,20 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
                 this.pacoteForm.patchValue({
                     pedidoId: result.pedidoId,
                     descricao: result.descricao,
+                    pacoteTipo: result.pedidoId ? 0 : 1,
+                    pacoteItems: [],
+                })
+
+                const pacoteItems = this.pacoteForm.get("pacoteItems") as FormArray
+                result.items.forEach((item: any) => {
+                    pacoteItems.push(
+                        this.formBuilder.group({
+                            id: item.id,
+                            produto: item.produto_nome,
+                            produtoId: item.produto,
+                            quantidade: item.quantidade,
+                        })
+                    )
                 })
             },
             error: (error) => console.log(error),
@@ -208,11 +222,13 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
             if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === "edit") {
                 this.subscriptions.add(
                     this.restService.put(`/pacotes/${this.id}`, data).subscribe({
-                        next: () => {
+                        next: (result: Blob) => {
                             this.poNotification.success({
                                 message: this.literals.saveSuccess,
                                 duration: environment.poNotificationDuration,
                             })
+
+                            this.excelService.createDownloadPdf(result, `pacote-${data.id || data.pedidoId}`)
 
                             if (willCreateAnother) {
                                 this.pacoteForm.reset()
@@ -236,10 +252,10 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
                             this.excelService.createDownloadPdf(result, `pacote-${data.id || data.pedidoId}`)
 
                             if (willCreateAnother) {
-                                // this.pacoteForm.reset()
-                                // this.router.navigate(["pacotes/new"])
+                                this.pacoteForm.reset()
+                                this.router.navigate(["pacotes/new"])
                             } else {
-                                // this.router.navigate(["pacotes"])
+                                this.router.navigate(["pacotes"])
                             }
                         },
                         error: (error) => console.log(error),
@@ -289,10 +305,10 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
                 return
             }
 
+            // verificar isso aqui pq ta nada ver pqp
             if (this.pacoteForm.get("pacoteTipo").value === 0) {
                 this.restService.get(`/pedidos-items/produto/${item.id}`).subscribe({
                     next: (result) => {
-                        console.log("Produto encontrado:", result)
                         const newProduto = {
                             ...item,
                             produto: `${result.produtoNome} - ${result.produtoDescricao}`,

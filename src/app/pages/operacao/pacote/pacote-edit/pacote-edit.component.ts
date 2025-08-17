@@ -78,6 +78,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
         quantidade: null,
         produtoId: "",
         produto: "",
+        quantidadeDisponivel: null,
     })
 
     pacoteItemsFormEdit = this.formBuilder.group({
@@ -440,5 +441,22 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
             pacoteItems: [],
         })
         this.pacoteItemsForm.reset()
+    }
+
+    onProdutoChange(event: any) {
+        if (!!this.pacoteForm.get("pedidoId").value) {
+            this.restService.get(`/pacotes/produto-info/${event}/${this.pacoteForm.get("pedidoId").value}`).subscribe({
+                next: (result) => {
+                    this.pacoteItemsForm.patchValue({ quantidadeDisponivel: result.quantidadeDisponivel })
+                },
+                error: (error) => {
+                    console.error("Erro ao buscar informações do produto:", error)
+                    this.poNotification.error({
+                        message: "Erro ao buscar informações do produto.",
+                        duration: environment.poNotificationDuration,
+                    })
+                },
+            })
+        }
     }
 }

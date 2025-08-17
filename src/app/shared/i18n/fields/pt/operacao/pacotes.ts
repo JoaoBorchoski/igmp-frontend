@@ -11,5 +11,6 @@ export const pacotesFields = {
         pacoteItems: "Itens do Pacote",
         quantidade: "Quantidade",
         produto: "Produto",
+        quantidadeDisponivel: "Quantidade Disponível",
     },
 }

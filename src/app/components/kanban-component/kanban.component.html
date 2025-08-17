@@ -1,0 +1,37 @@
+<div
+    cdkDropListGroup
+    style="display: flex; gap: 16px; padding: 16px; overflow-x: auto"
+    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding"
+>
+    <div
+        *ngFor="let column of kanbanData"
+        cdkDropList
+        [cdkDropListData]="column.items"
+        (cdkDropListDropped)="drop($event)"
+        style="min-width: 300px; background-color: #f5f5f5; padding: 8px; border-radius: 4px"
+        class="po-sm-12 po-md-3 po-lg-3 po-xl-3 no-padding"
+    >
+        <div style="font-weight: bold; font-size: 1.2em; padding: 8px; border-bottom: 2px solid #ccc; margin-bottom: 8px">
+            {{ column.title }}
+        </div>
+
+        <div style="min-height: 50px">
+            <div *ngFor="let item of column.items" cdkDrag style="cursor: grab; margin-bottom: 8px">
+                <div
+                    (click)="openBudget(item)"
+                    style="
+                        cursor: pointer;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        background-color: #fff;
+                        border-radius: 4px;
+                        padding: 16px;
+                    "
+                >
+                    <div style="font-size: 1.1em; font-weight: bold">{{ item.title }}</div>
+                    <div style="font-size: 0.9em; color: #666; margin-top: 4px">{{ item.subtitle }}</div>
+                    <div style="margin-top: 8px">{{ item.description }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

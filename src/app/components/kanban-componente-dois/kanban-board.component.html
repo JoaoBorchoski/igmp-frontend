@@ -1,0 +1,213 @@
+<div style="padding: 20px; background-color: #f5f5f5; min-height: 100vh">
+    <!-- Cabeçalho do Kanban -->
+    <div style="margin-bottom: 30px; text-align: center">
+        <h1 style="color: #333; font-size: 28px; font-weight: bold; margin: 0">CRM - Kanban de Orçamentos</h1>
+        <p style="color: #666; font-size: 16px; margin: 10px 0 0 0">Gerencie seus orçamentos através do pipeline de vendas</p>
+    </div>
+
+    <!-- Board do Kanban -->
+    <div style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px">
+        <!-- Coluna do Kanban -->
+        <div
+            *ngFor="let coluna of kanbanBoard.colunas"
+            style="
+                min-width: 300px;
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                padding: 16px;
+            "
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event, coluna.id)"
+        >
+            <!-- Cabeçalho da Coluna -->
+            <div
+                style="margin-bottom: 16px; padding: 12px; border-radius: 6px; text-align: center"
+                [style.background-color]="coluna.cor"
+            >
+                <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #333">
+                    {{ coluna.titulo }}
+                </h3>
+                <span
+                    style="
+                        background-color: rgba(0, 0, 0, 0.1);
+                        color: #666;
+                        padding: 4px 8px;
+                        border-radius: 12px;
+                        font-size: 12px;
+                        margin-top: 8px;
+                        display: inline-block;
+                    "
+                >
+                    {{ coluna.cards.length }} {{ coluna.cards.length === 1 ? "item" : "itens" }}
+                </span>
+            </div>
+
+            <!-- Cards da Coluna -->
+            <div style="min-height: 200px">
+                <div
+                    *ngFor="let card of coluna.cards"
+                    style="
+                        background-color: white;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 8px;
+                        padding: 16px;
+                        margin-bottom: 12px;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    "
+                    draggable="true"
+                    (dragstart)="onDragStart($event, card, coluna.id)"
+                    (click)="onCardClick(card)"
+                    (mouseenter)="
+                        $event.target.style.transform = 'translateY(-2px)';
+                        $event.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'
+                    "
+                    (mouseleave)="
+                        $event.target.style.transform = 'translateY(0)';
+                        $event.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)'
+                    "
+                >
+                    <!-- Cabeçalho do Card -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px">
+                        <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #333; line-height: 1.4; flex: 1">
+                            {{ card.titulo }}
+                        </h4>
+                        <span
+                            style="width: 8px; height: 8px; border-radius: 50%; margin-left: 8px; flex-shrink: 0"
+                            [style.background-color]="getCorPrioridade(card.prioridade)"
+                            [title]="'Prioridade: ' + card.prioridade"
+                        >
+                        </span>
+                    </div>
+
+                    <!-- Cliente -->
+                    <div style="display: flex; align-items: center; margin-bottom: 8px">
+                        <span style="color: #666; font-size: 12px; margin-right: 6px">👤</span>
+                        <span style="color: #666; font-size: 12px; font-weight: 500">
+                            {{ card.cliente }}
+                        </span>
+                    </div>
+
+                    <!-- Valor -->
+                    <div style="display: flex; align-items: center; margin-bottom: 8px">
+                        <span style="color: #666; font-size: 12px; margin-right: 6px">💰</span>
+                        <span style="color: #2e7d32; font-size: 14px; font-weight: 600">
+                            {{ formatarValor(card.valor) }}
+                        </span>
+                    </div>
+
+                    <!-- Data de Vencimento -->
+                    <div style="display: flex; align-items: center; margin-bottom: 12px">
+                        <span style="color: #666; font-size: 12px; margin-right: 6px">📅</span>
+                        <span style="color: #666; font-size: 12px">
+                            {{ formatarData(card.dataVencimento) }}
+                        </span>
+                    </div>
+
+                    <!-- Descrição (se existir) -->
+                    <div
+                        *ngIf="card.descricao"
+                        style="background-color: #f8f9fa; padding: 8px; border-radius: 4px; margin-bottom: 12px"
+                    >
+                        <p style="margin: 0; font-size: 11px; color: #666; line-height: 1.4">
+                            {{ card.descricao }}
+                        </p>
+                    </div>
+
+                    <!-- Ações do Card -->
+                    <div style="display: flex; justify-content: space-between; align-items: center">
+                        <span
+                            style="font-size: 10px; color: #999; background-color: #f0f0f0; padding: 2px 6px; border-radius: 10px"
+                        >
+                            ID: {{ card.id }}
+                        </span>
+
+                        <!-- Botão PO-UI para ações -->
+                        <po-button
+                            p-label="Ver"
+                            p-size="small"
+                            p-type="link"
+                            style="font-size: 10px"
+                            (p-click)="onCardClick(card); $event.stopPropagation()"
+                        >
+                        </po-button>
+                    </div>
+                </div>
+
+                <!-- Mensagem quando não há cards -->
+                <div
+                    *ngIf="coluna.cards.length === 0"
+                    style="
+                        text-align: center;
+                        padding: 40px 20px;
+                        color: #999;
+                        font-size: 14px;
+                        border: 2px dashed #ddd;
+                        border-radius: 8px;
+                        background-color: #fafafa;
+                    "
+                >
+                    <span style="font-size: 24px; display: block; margin-bottom: 8px">📋</span>
+                    Nenhum orçamento nesta etapa
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé com informações -->
+    <div
+        style="
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        "
+    >
+        <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap">
+            <!-- Total de Orçamentos -->
+            <div style="text-align: center">
+                <span style="display: block; font-size: 24px; font-weight: bold; color: #1976d2">
+                    {{ kanbanBoard.colunas.reduce((total, col) => total + col.cards.length, 0) }}
+                </span>
+                <span style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px">
+                    Total de Orçamentos
+                </span>
+            </div>
+
+            <!-- Valor Total -->
+            <div style="text-align: center">
+                <span style="display: block; font-size: 24px; font-weight: bold; color: #2e7d32">
+                    {{ formatarValor(kanbanBoard.colunas.reduce((total, col) => 
+               total + col.cards.reduce((colTotal, card) => colTotal + card.valor, 0), 0)) }}
+                </span>
+                <span style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px">
+                    Valor Total em Pipeline
+                </span>
+            </div>
+
+            <!-- Pedidos Convertidos -->
+            <div style="text-align: center">
+                <span style="display: block; font-size: 24px; font-weight: bold; color: #7b1fa2">
+                    {{ kanbanBoard.colunas.find(col => col.id === 'pedido')?.cards.length || 0 }}
+                </span>
+                <span style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px">
+                    Pedidos Convertidos
+                </span>
+            </div>
+        </div>
+
+        <!-- Instruções de Uso -->
+        <div
+            style="margin-top: 20px; padding: 16px; background-color: #e3f2fd; border-radius: 6px; border-left: 4px solid #1976d2"
+        >
+            <p style="margin: 0; font-size: 13px; color: #1565c0; line-height: 1.5">
+                <strong>💡 Dica:</strong> Arraste os cards entre as colunas para alterar o status do orçamento. Clique em um card
+                para visualizar os detalhes. O último estágio "Pedido" representa orçamentos convertidos.
+            </p>
+        </div>
+    </div>
+</div>

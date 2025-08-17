@@ -11,4 +11,5 @@ export interface NegociacaoInterface {
   motivoPerda?: string
   createdAt?: Date
   updatedAt?: Date
+  status?: string
 }

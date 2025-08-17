@@ -1,1 +1,7 @@
-<app-custom-table [pageTitle]="this.literals.title" route="produtos" [initialFields]="initialFields"> </app-custom-table>
+<po-page-default p-title="CRM"
+    ><app-kanban
+        [kanbanData]="kanbanData"
+        (cardDropped)="handleCardDropped($event)"
+        (cardClicked)="handleCardClicked($event)"
+    ></app-kanban>
+</po-page-default>

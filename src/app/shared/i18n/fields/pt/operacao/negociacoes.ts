@@ -9,7 +9,8 @@ export const negociacoesFields = {
     dataCriacao: 'Data de Criação',
     dataFechamento: 'Data de Fechamento',
     valorEstimado: 'Valor Estimado',
-    descricao: 'Descrição da Negociação',
+    descricao: 'Descrição',
     motivoPerda: 'Motivo da Perda (se aplicável)',
+    status: 'Status',
   }
 }

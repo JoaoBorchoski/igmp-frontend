@@ -1,7 +1,8 @@
 import { HttpClient } from "@angular/common/http"
 import { Component, OnInit, ViewChild } from "@angular/core"
+import { FormBuilder } from "@angular/forms"
 import { ActivatedRoute, Router } from "@angular/router"
-import { PoDialogService, PoNotificationService, PoPageAction, PoPageFilter } from "@po-ui/ng-components"
+import { PoDialogService, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoPageFilter } from "@po-ui/ng-components"
 import { Subscription } from "rxjs"
 import { finalize, map } from "rxjs/operators"
 import { FilterModalComponent } from "src/app/components/filter-modal/filter-modal.component"
@@ -33,6 +34,21 @@ interface INegociacao {
 export class NegociacaoListComponent implements OnInit {
   @ViewChild(FilterModalComponent, { static: true }) filterModal: FilterModalComponent
 
+  @ViewChild(PoModalComponent, { static: true }) poModal: PoModalComponent
+
+  public primaryAction: PoModalAction = {
+    label: "Salvar",
+    action: () => this.salvarNegociacao(),
+  }
+
+  public secondaryAction: PoModalAction = {
+    label: "Cancelar",
+    action: () => {
+      this.poModal.close()
+      this.negociacaoForm.reset()
+    },
+  }
+
   public literals: any = {}
 
   public initialFields = []
@@ -63,6 +79,21 @@ export class NegociacaoListComponent implements OnInit {
 
   public isModalVisible = false;
 
+  negociacaoForm = this.formBuilder.group({
+    id: "",
+    descricao: "",
+    status: "",
+    dataCriacao: null,
+    valorEstimado: null,
+  })
+
+  public statusOptions = [
+    { label: "Novo", value: 0 },
+    { label: "Em andamento", value: 1 },
+    { label: "Aguardando", value: 2 },
+    { label: "Concluído", value: 3 },
+  ]
+
   constructor(private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private httpClient: HttpClient,
@@ -71,6 +102,7 @@ export class NegociacaoListComponent implements OnInit {
     private poNotificationService: PoNotificationService,
     private restService: RestService,
     private languagesService: LanguagesService,
+    private formBuilder: FormBuilder,
     private router: Router) { }
 
   ngOnInit() {
@@ -80,7 +112,6 @@ export class NegociacaoListComponent implements OnInit {
 
   getNegociacoes() {
     this.httpClient.post(`${environment.baseUrl}/negociacoes/list`, { page: 1, pageSize: this.pageSize, search: '', filter: '' }).subscribe((res: any) => {
-      console.log(res)
       this.negociacoes = res.items
     })
   }
@@ -107,8 +138,10 @@ export class NegociacaoListComponent implements OnInit {
           this.loading = false
         }))
         .subscribe({
-          next: (response: ListResponse) => this.items = response.items,
-          error: () => this.items = []
+          next: (response: ListResponse) => {
+            this.negociacoes = response.items
+          },
+          error: () => this.negociacoes = []
         })
     )
   }
@@ -128,17 +161,30 @@ export class NegociacaoListComponent implements OnInit {
   }
 
   onCardClick(negociacao: INegociacao): void {
-    this.negociacaoSelecionada = negociacao
+    this.negociacaoForm.patchValue({
+      id: negociacao.id,
+      descricao: negociacao.descricao,
+      status: negociacao.status,
+      dataCriacao: new Date(negociacao.dataCriacao),
+      valorEstimado: negociacao.valorEstimado,
+    })
     this.openModal()
   }
 
   openModal(): void {
-    this.isModalVisible = true;
+    this.poModal.open()
   }
 
-  closeModal(): void {
-    this.negociacaoSelecionada = null
-    this.isModalVisible = false;
+  salvarNegociacao(): void {
+    if (this.negociacaoForm.valid) {
+      this.httpClient.put(`${environment.baseUrl}/negociacoes/${this.negociacaoForm.get('id').value}`, this.negociacaoForm.value).subscribe((res: any) => {
+        console.log(res)
+        this.poModal.close()
+        this.getNegociacoes()
+        this.negociacaoForm.reset()
+      })
+    } else {
+      this.poNotificationService.warning('Por favor, preencha todos os campos obrigatórios.')
+    }
   }
-
 }

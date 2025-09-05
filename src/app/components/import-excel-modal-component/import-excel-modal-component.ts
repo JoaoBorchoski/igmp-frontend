@@ -121,6 +121,7 @@ export class ImportExcelModalComponent implements OnInit {
                 data.append(key, this.dataInfos[key])
             })
         }
+
         this.isLoading = true
         if (this.viewProgressBar) this.startTimer(data)
         this.uuid = uuidV4()
@@ -135,10 +136,15 @@ export class ImportExcelModalComponent implements OnInit {
                     })
                 )
                 .subscribe(
-                    (response: any) => {
+                    (response: any | Blob) => {
                         this.isHideLoading = true
-                        if (response && !response.data.warning) {
-                            this.resultItens.emit(response.data)
+                        if (response && !response?.data?.warning) {
+                            this.resultItens.emit(response)
+
+                            this.notificationService.success({
+                                message: "Arquivo importado com sucesso.",
+                                duration: environment.poNotificationDuration,
+                            })
                         }
                         if (!response || !response.data.warning) {
                             this.notificationService.success({

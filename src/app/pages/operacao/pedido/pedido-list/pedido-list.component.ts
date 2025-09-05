@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from "@angular/core"
 import { PoModalComponent } from "@po-ui/ng-components"
 import { map } from "rxjs/operators"
 import { CustomTableComponent } from "src/app/components/custom-table/custom-table.component"
+import { ExcelService } from "src/app/services/excel.service"
 import { LanguagesService } from "src/app/services/languages.service"
 import { environment } from "src/environments/environment"
 
@@ -23,7 +24,7 @@ export class PedidoListComponent implements OnInit {
     public downloadRoute = ""
     public downloadExcelFileName = ""
 
-    constructor(private languagesService: LanguagesService) {}
+    constructor(private languagesService: LanguagesService, private excelService: ExcelService) {}
 
     readonly customPageActions = [
         {
@@ -61,5 +62,15 @@ export class PedidoListComponent implements OnInit {
 
     public importSuccess() {
         this.customTable.updateItems()
+    }
+
+    public handleResultItens(event: any) {
+        this.excelService.createDownloadPdf(
+            event,
+            `pedido-${new Date().toLocaleTimeString("pt-BR", {
+                hour: "2-digit",
+                minute: "2-digit",
+            })}-${new Date().toLocaleDateString("pt-BR", { year: "numeric", month: "2-digit", day: "2-digit" })}`
+        )
     }
 }

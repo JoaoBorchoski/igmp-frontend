@@ -79,6 +79,10 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
         produtoId: "",
         produto: "",
         quantidadeDisponivel: null,
+        tipoItem: 0,
+        quantidadeLateral: null,
+        quantidadeCabeceira: null,
+        quantidadeLateralCabeceira: null,
     })
 
     pacoteItemsFormEdit = this.formBuilder.group({
@@ -86,11 +90,19 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
         quantidade: null,
         produtoId: "",
         produto: "",
+        quantidadeLateral: null,
+        quantidadeCabeceira: null,
+        quantidadeLateralCabeceira: null,
     })
 
     public pacoteTipos = [
         { label: "Pedido", value: 0 },
         { label: "Movimentação Interna", value: 1 },
+    ]
+
+    public tipoItemOptions = [
+        { label: "Conjunto", value: 0 },
+        { label: "Peça Final", value: 1 },
     ]
 
     public readonly serviceApi = `${environment.baseUrl}/pacotes`
@@ -103,7 +115,10 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
     public readonly columnsTableItems = [
         { property: "id", key: true, visible: false },
         { property: "produto", label: "Produto" },
-        { property: "quantidade", label: "Quantidade", width: "10%" },
+        { property: "quantidade", label: "Quantidade", width: "7%", type: "number" },
+        { property: "quantidadeLateral", label: "Quantidade Lateral", width: "7%", type: "number" },
+        { property: "quantidadeCabeceira", label: "Quantidade Cabeceira", width: "7%", type: "number" },
+        { property: "quantidadeLateralCabeceira", label: "Quantidade Lateral para cabeceira", width: "7%", type: "number" },
     ]
 
     columnsProduto: Array<PoLookupColumn> = [
@@ -210,6 +225,10 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
                             produto: item.produto_nome,
                             produtoId: item.produto,
                             quantidade: item.quantidade,
+                            quantidadeLateral: item.quantidade_lateral,
+                            quantidadeCabeceira: item.quantidade_cabeceira,
+                            quantidadeLateralCabeceira: item.quantidade_lateral_cabeceira,
+                            tipoItem: item.tipo_item,
                         })
                     )
                 })
@@ -320,6 +339,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
                         pedidoItems.push(this.formBuilder.group(newProduto))
 
                         this.pacoteItemsForm.reset()
+                        this.pacoteItemsForm.get("tipoItem").setValue(0)
                     },
                     error: (error: any) => {
                         console.log("Erro ao buscar produto:", error)

@@ -58,6 +58,7 @@ export class PedidoEditComponent implements OnInit, OnDestroy {
         descricao: "",
         dataEmissao: new Date(),
         pedidoItems: this.formBuilder.array([]),
+        pacoteItems: this.formBuilder.array([]),
     })
 
     pedidoItemsForm = this.formBuilder.group({
@@ -117,6 +118,35 @@ export class PedidoEditComponent implements OnInit, OnDestroy {
     columnsProduto: Array<PoLookupColumn> = [
         { property: "label", label: "Nome" },
         { property: "nome", label: "Código", width: "15%" },
+    ]
+
+    columnsTablePacoteItems = [
+        { property: "id", key: true, visible: false },
+        { property: "produto", label: "Produto" },
+        { property: "quantidade", label: "Quantidade", width: "10%", type: "number" },
+        { property: "quantidadeLateral", label: "Quantidade Lateral", width: "10%", type: "number" },
+        { property: "quantidadeCabeceira", label: "Quantidade Cabeceira", width: "10%", type: "number" },
+        { property: "quantidadeLateralCabeceira", label: "Quantidade Lateral para cabeceira", width: "10%", type: "number" },
+        {
+            property: "confirmado",
+            label: "Carregado",
+            width: "10%",
+            type: "subtitle",
+            subtitles: [
+                {
+                    value: true,
+                    color: "color-10",
+                    label: "Carregado",
+                    content: "S",
+                },
+                {
+                    value: false,
+                    color: "color-07",
+                    label: "Não carregado",
+                    content: "N",
+                },
+            ],
+        },
     ]
 
     constructor(
@@ -207,6 +237,7 @@ export class PedidoEditComponent implements OnInit, OnDestroy {
                         ? new Date(result.dataEmissao.split("/").reverse().join("-") + "T00:00:00")
                         : new Date(),
                     pedidoItems: [],
+                    pacoteItems: [],
                 })
 
                 const pedidoItems = this.pedidoForm.get("pedidoItems") as FormArray
@@ -216,6 +247,21 @@ export class PedidoEditComponent implements OnInit, OnDestroy {
                             id: item.produtoId,
                             produto: item.produto,
                             quantidade: item.quantidade,
+                        })
+                    )
+                })
+
+                const pacoteItems = this.pedidoForm.get("pacoteItems") as FormArray
+                result.pacoteItems.forEach((item: any) => {
+                    pacoteItems.push(
+                        this.formBuilder.group({
+                            id: item.produto,
+                            produto: item.produto_nome,
+                            quantidade: item.quantidade,
+                            quantidadeLateral: item.quantidade_lateral,
+                            quantidadeCabeceira: item.quantidade_cabeceira,
+                            quantidadeLateralCabeceira: item.quantidade_lateral_cabeceira,
+                            confirmado: item.confirmado,
                         })
                     )
                 })

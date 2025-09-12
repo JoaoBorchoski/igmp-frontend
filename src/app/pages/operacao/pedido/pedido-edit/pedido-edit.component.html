@@ -60,68 +60,79 @@
         </div>
     </form>
 
-    <po-divider class="po-sm-12 po-md-12 po-lg-12 po-xl-12" p-label="Items"></po-divider>
+    <po-tabs class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+        <po-tab p-label="Itens Pedido" p-active>
+            <!-- <po-divider class="po-sm-12 po-md-12 po-lg-12 po-xl-12" p-label="Items"></po-divider> -->
 
-    <form [formGroup]="pedidoItemsForm">
-        <div>
-            <div class="po-sm-12 po-md-5 po-lg-5 po-xl-5 no-padding">
-                <po-lookup
-                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
-                    formControlName="id"
-                    name="id"
-                    p-field-label="label"
-                    p-field-value="value"
-                    p-clean
-                    [p-disabled]="!canAddItems"
-                    [p-filter-service]="produtoIdService"
-                    [p-label]="this.literals.fields.form['produto']"
-                    p-required
-                    [p-columns]="columnsProduto"
-                >
-                </po-lookup>
-            </div>
+            <form [formGroup]="pedidoItemsForm">
+                <div>
+                    <div class="po-sm-12 po-md-5 po-lg-5 po-xl-5 no-padding">
+                        <po-lookup
+                            class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
+                            formControlName="id"
+                            name="id"
+                            p-field-label="label"
+                            p-field-value="value"
+                            p-clean
+                            [p-disabled]="!canAddItems"
+                            [p-filter-service]="produtoIdService"
+                            [p-label]="this.literals.fields.form['produto']"
+                            p-required
+                            [p-columns]="columnsProduto"
+                        >
+                        </po-lookup>
+                    </div>
 
-            <div class="po-sm-12 po-md-5 po-lg-5 po-xl-5 no-padding po-required">
-                <po-number
-                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
-                    formControlName="quantidade"
-                    name="quantidade"
-                    p-label="{{ literals.fields.form['quantidade'] }}"
-                    [p-readonly]="readonly"
-                    p-min="1"
-                    p-required
-                    [p-disabled]="!canAddItems"
-                >
-                </po-number>
-            </div>
+                    <div class="po-sm-12 po-md-5 po-lg-5 po-xl-5 no-padding po-required">
+                        <po-number
+                            class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                            formControlName="quantidade"
+                            name="quantidade"
+                            p-label="{{ literals.fields.form['quantidade'] }}"
+                            [p-readonly]="readonly"
+                            p-min="1"
+                            p-required
+                            [p-disabled]="!canAddItems"
+                        >
+                        </po-number>
+                    </div>
 
-            <div class="po-sm-12 po-md-2 po-lg-2 po-xl-2 no-padding po-mt-4">
-                <po-button
-                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
-                    p-label="Adicionar"
-                    p-kind="primary"
-                    p-disabled="pedidoItemsForm.invalid || readonly"
-                    (p-click)="addItem()"
-                    [p-disabled]="!canAddItems"
-                >
-                </po-button>
-            </div>
+                    <div class="po-sm-12 po-md-2 po-lg-2 po-xl-2 no-padding po-mt-4">
+                        <po-button
+                            class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                            p-label="Adicionar"
+                            p-kind="primary"
+                            p-disabled="pedidoItemsForm.invalid || readonly"
+                            (p-click)="addItem()"
+                            [p-disabled]="!canAddItems"
+                        >
+                        </po-button>
+                    </div>
 
-            <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-                <po-table
-                    #table
-                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
-                    [p-columns]="columnsTableItems"
-                    [p-items]="pedidoForm.get('pedidoItems').value"
-                    p-action-add
-                    p-action-remove
-                    [p-actions]="tableActions"
-                    p-actions-right="true"
-                >
-                </po-table>
-            </div>
-        </div>
-    </form>
+                    <div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+                        <po-table
+                            #table
+                            class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                            [p-columns]="columnsTableItems"
+                            [p-items]="pedidoForm.get('pedidoItems').value"
+                            p-action-add
+                            p-action-remove
+                            [p-actions]="tableActions"
+                            p-actions-right="true"
+                        >
+                        </po-table>
+                    </div>
+                </div></form
+        ></po-tab>
+        <po-tab p-label="Itens Carregamento">
+            <po-table
+                class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                [p-columns]="columnsTablePacoteItems"
+                [p-items]="pedidoForm.get('pacoteItems').value"
+            >
+            </po-table>
+        </po-tab>
+    </po-tabs>
 </po-page-default>
 
 <po-modal

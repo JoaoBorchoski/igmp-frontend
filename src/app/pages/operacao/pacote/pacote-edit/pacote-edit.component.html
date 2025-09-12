@@ -66,7 +66,49 @@
                 </po-lookup>
             </div>
 
-            <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding">
+            <div>
+                <po-select
+                    class="po-sm-12 po-md-3 po-lg-3 po-xl-3 no-padding"
+                    formControlName="tipoItem"
+                    name="tipoItem"
+                    p-label="Tipo de Item"
+                    [p-options]="tipoItemOptions"
+                    p-placeholder="Selecione"
+                >
+                </po-select>
+            </div>
+
+            <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding" *ngIf="pacoteItemsForm.get('tipoItem').value == 0">
+                <po-number
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="quantidadeLateral"
+                    name="quantidadeLateral"
+                    p-label="Quantidade Lateral"
+                >
+                </po-number>
+            </div>
+
+            <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding" *ngIf="pacoteItemsForm.get('tipoItem').value == 0">
+                <po-number
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="quantidadeCabeceira"
+                    name="quantidadeCabeceira"
+                    p-label="Quantidade Cabeceira"
+                >
+                </po-number>
+            </div>
+
+            <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding" *ngIf="pacoteItemsForm.get('tipoItem').value == 0">
+                <po-number
+                    class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
+                    formControlName="quantidadeLateralCabeceira"
+                    name="quantidadeLateralCabeceira"
+                    p-label="Quantidade Lateral para cabeceira"
+                >
+                </po-number>
+            </div>
+
+            <!-- <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding">
                 <po-number
                     class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
                     formControlName="quantidadeDisponivel"
@@ -76,16 +118,18 @@
                     [p-disabled]="!pacoteItemsForm.get('id').value || readonly"
                 >
                 </po-number>
-            </div>
+            </div> -->
 
-            <div class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding po-required">
+            <div
+                class="po-sm-12 po-md-12 po-lg-3 po-xl-3 no-padding po-required"
+                *ngIf="pacoteItemsForm.get('tipoItem').value == 1"
+            >
                 <po-number
                     class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
                     formControlName="quantidade"
                     name="quantidade"
                     p-label="{{ literals.fields.form['quantidade'] }}"
                     p-min="1"
-                    p-required
                     [p-disabled]="!pacoteItemsForm.get('id').value || readonly"
                 >
                 </po-number>
@@ -97,7 +141,7 @@
                     p-label="Adicionar"
                     p-kind="primary"
                     (p-click)="addItem()"
-                    [p-disabled]="!pacoteItemsForm.get('quantidade').value || readonly"
+                    [p-disabled]="readonly"
                 >
                 </po-button>
             </div>

@@ -141,12 +141,14 @@ export class ImportExcelModalComponent implements OnInit {
                         if (response && !response?.data?.warning) {
                             this.resultItens.emit(response)
 
+                            this.closeModal()
+
                             this.notificationService.success({
                                 message: "Arquivo importado com sucesso.",
                                 duration: environment.poNotificationDuration,
                             })
                         }
-                        if (!response || !response.data.warning) {
+                        if (!response || !response?.data?.warning) {
                             this.notificationService.success({
                                 message: "Arquivo importado com sucesso.",
                                 duration: environment.poNotificationDuration,

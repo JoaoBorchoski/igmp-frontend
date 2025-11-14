@@ -1,187 +1,320 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from "@angular/common/http"
 import { Component, OnDestroy, OnInit } from "@angular/core"
-import { ActivatedRoute, Router } from '@angular/router'
-import { PoDynamicFormField, PoPageAction, PoNotificationService, PoNotification } from '@po-ui/ng-components'
-import { FormBuilder } from '@angular/forms'
-import { Subscription } from 'rxjs'
+import { ActivatedRoute, Router } from "@angular/router"
+import {
+	PoDynamicFormField,
+	PoPageAction,
+	PoNotificationService,
+	PoNotification,
+	PoLookupColumn,
+	PoTableAction,
+} from "@po-ui/ng-components"
+import { FormArray, FormBuilder } from "@angular/forms"
+import { Subscription, forkJoin } from "rxjs"
 import { environment } from "src/environments/environment"
 import { RestService } from "src/app/services/rest.service"
-import { LanguagesService } from 'src/app/services/languages.service'
+import { LanguagesService } from "src/app/services/languages.service"
 
 @Component({
-  selector: "app-tipo-porta-edit",
-  templateUrl: "./tipo-porta-edit.component.html",
-  styleUrls: ["./tipo-porta-edit.component.scss"],
+	selector: "app-tipo-porta-edit",
+	templateUrl: "./tipo-porta-edit.component.html",
+	styleUrls: ["./tipo-porta-edit.component.scss"],
 })
 export class TipoPortaEditComponent implements OnInit, OnDestroy {
-  public id: string
-  public readonly = false
-  public result: any
-  public literals: any = {}
+	public id: string
+	public readonly = false
+	public result: any
+	public literals: any = {}
 
-  tipoPortaForm = this.formBuilder.group({
-    nome: '',
-    descricao: '',
-  })
+	public readonly serviceApi = `${environment.baseUrl}/espelhos-carga`
+	public pedidoIdService = `${environment.baseUrl}/pedidos/select`
+	public pedidoPacotesIdService = `${environment.baseUrl}/pedidos/selectPacotes`
+	public produtoIdService = `${environment.baseUrl}/produtos/select`
 
-  public readonly serviceApi = `${environment.baseUrl}/tipos-porta`
+	columnsFornecedor: Array<PoLookupColumn> = [{ property: "label", label: "Pedido" }]
 
-  subscriptions = new Subscription()
+	tipoPortaForm = this.formBuilder.group({
+		pedidoId: "",
+		pacoteId: [],
+		placa: "",
+		motorista: "",
+		lote: "",
+		descricao: "",
+		espelhoCargaItems: this.formBuilder.array([]),
+	})
 
-  public readonly pageActions: Array<PoPageAction> = []
+	public readonly columnsTableItems = [
+		{ property: "id", key: true, visible: false },
+		{ property: "descricao", label: "Descrição" },
+	]
 
-  constructor(
-    private formBuilder: FormBuilder,
-    public httpClient: HttpClient,
-    public restService: RestService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private poNotification: PoNotificationService,
-    private languagesService: LanguagesService
-  ) { }
+	public readonly columnsTablePacoteItems = [
+		{ property: "id", key: true, visible: false },
+		{ property: "produto_nome", label: "Produto" },
+		{ property: "quantidade", label: "Quantidade", type: "number" },
+	]
 
-  ngOnInit(): void {
-    this.getLiterals()
+	public tableActions: PoTableAction[] = [
+		{ label: "", action: this.removeItemTable.bind(this), icon: "fa-solid fa-trash" },
+	]
 
-    this.id = this.activatedRoute.snapshot.paramMap.get("id")
+	subscriptions = new Subscription()
 
-    this.pageButtonsBuilder(this.getPageType(this.activatedRoute.snapshot.routeConfig.path))
+	public readonly pageActions: Array<PoPageAction> = []
 
-    if (this.id) {
-      this.subscriptions.add(this.getTipoPorta(this.id))
-    }
-  }
+	constructor(
+		private formBuilder: FormBuilder,
+		public httpClient: HttpClient,
+		public restService: RestService,
+		private activatedRoute: ActivatedRoute,
+		private router: Router,
+		private poNotification: PoNotificationService,
+		private languagesService: LanguagesService
+	) {}
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe()
-  }
+	ngOnInit(): void {
+		this.getLiterals()
 
-  getLiterals() {
-    this.languagesService.getLiterals({ type: 'edit', module: 'configuracao', options: 'tipoPorta'})
-      .subscribe({
-        next: res => this.literals = res
-      })
-  }
+		this.id = this.activatedRoute.snapshot.paramMap.get("id")
 
-  getPageType(route: string): string {
-    switch (route) {
-      case 'new':
-        return 'new'
-      case 'new/:id':
-        return 'new'
-      case 'edit':
-        return 'edit'
-      case 'edit/:id':
-        return 'edit'
-      case 'view/:id':
-        return 'view'
-    }
-  }
+		this.pageButtonsBuilder(this.getPageType(this.activatedRoute.snapshot.routeConfig.path))
 
-  pageButtonsBuilder(pageType: string): null {
-    if (pageType === 'view') {
-      this.readonly = true
+		if (this.id) {
+			this.subscriptions.add(this.getTipoPorta(this.id))
+		}
+	}
 
-      this.pageActions.push(
-        {
-          label: this.literals.return,
-          action: this.goBack.bind(this),
-        }
-      )
-      return
-    }
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe()
+	}
 
-    this.pageActions.push(
-      {
-        label: this.literals.save,
-        action: () => this.save(this.tipoPortaForm.value)
-      },
-      {
-        label: this.literals.saveAndNew,
-        action: () => this.save(this.tipoPortaForm.value, true)
-      },
-      {
-        label: this.literals.cancel,
-        action: this.goBack.bind(this),
-      }
-    )
+	getLiterals() {
+		this.languagesService.getLiterals({ type: "edit", module: "configuracao", options: "tipoPorta" }).subscribe({
+			next: (res) => (this.literals = res),
+		})
+	}
 
-    return
-  }
+	getPageType(route: string): string {
+		switch (route) {
+			case "new":
+				return "new"
+			case "new/:id":
+				return "new"
+			case "edit":
+				return "edit"
+			case "edit/:id":
+				return "edit"
+			case "view/:id":
+				return "view"
+		}
+	}
 
-  getTipoPorta(id: string) {
-    this.restService
-      .get(`/tipos-porta/${id}`)
-      .subscribe({
-        next: (result) => {
-          this.tipoPortaForm.patchValue({
-            nome: result.nome,
-            descricao: result.descricao,
-          })
-        },
-        error: (error) => console.log(error)
-      })
-  }
+	pageButtonsBuilder(pageType: string): null {
+		if (pageType === "view") {
+			this.readonly = true
 
-  save(data, willCreateAnother?: boolean) {
-    if (this.tipoPortaForm.valid) {
-      if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === 'edit') {
-        this.subscriptions.add(
-          this.restService
-            .put(`/tipos-porta/${this.id}`, data)
-            .subscribe({
-              next: () => {
-                this.poNotification.success({
-                  message: this.literals.saveSuccess,
-                  duration: environment.poNotificationDuration
-                })
+			this.pageActions.push({
+				label: this.literals.return,
+				action: this.goBack.bind(this),
+			})
+			return
+		}
 
-                if (willCreateAnother) {
-                  this.tipoPortaForm.reset()
-                  this.router.navigate(["tipos-porta/new"])
-                } else {
-                  this.router.navigate(["tipos-porta"])
-                }
-              },
-              error: (error) => console.log(error),
-            })
-        )
-      } else {
-        this.subscriptions.add(
-          this.restService
-            .post("/tipos-porta", data)
-            .subscribe({
-              next: () => {
-                this.poNotification.success({
-                  message: this.literals.saveSuccess,
-                  duration: environment.poNotificationDuration
-                })
+		this.pageActions.push(
+			{
+				label: this.literals.save,
+				action: () => this.save(this.tipoPortaForm.value),
+			},
+			{
+				label: this.literals.saveAndNew,
+				action: () => this.save(this.tipoPortaForm.value, true),
+			},
+			{
+				label: this.literals.cancel,
+				action: this.goBack.bind(this),
+			}
+		)
 
-                if (willCreateAnother) {
-                  this.tipoPortaForm.reset()
-                  this.router.navigate(["tipos-porta/new"])
-                } else {
-                  this.router.navigate(["tipos-porta"])
-                }
-              },
-              error: (error) => console.log(error),
-            })
-        )
-      }
-    } else {
-      this.markAsDirty()
-      this.poNotification.warning({
-        message: this.literals.formError,
-        duration: environment.poNotificationDuration
-      })
-    }
-  }
+		return
+	}
 
-  markAsDirty() {
-    this.tipoPortaForm.controls.nome.markAsDirty()
-  }
+	getTipoPorta(id: string) {
+		this.restService.get(`/espelhos-carga/${id}`).subscribe({
+			next: (result) => {
+				const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+				espelhoCargaItems.clear()
 
-  goBack() {
-    this.router.navigate(["tipos-porta"])
-  }
+				result.espelhoCargaItems?.forEach((pacote: any) => {
+					espelhoCargaItems.push(
+						this.formBuilder.group({
+							id: pacote.id,
+							descricao: pacote.descricao,
+							items: this.formBuilder.array(
+								pacote.items.map((item: any) =>
+									this.formBuilder.group({
+										id: item.id,
+										produto: item.produto,
+										produto_nome: item.produto_nome,
+										quantidade: item.quantidade,
+									})
+								)
+							),
+						})
+					)
+				})
+
+				this.tipoPortaForm.patchValue({
+					pedidoId: result.pedidoId,
+					placa: result.placa,
+					motorista: result.motorista,
+					lote: result.lote,
+					descricao: result.descricao,
+				})
+			},
+			error: (error) => console.log(error),
+		})
+	}
+
+	save(data, willCreateAnother?: boolean) {
+		if (this.tipoPortaForm.valid) {
+			if (this.tipoPortaForm.get("espelhoCargaItems").value.length === 0) {
+				this.poNotification.warning({
+					message: "Nenhum pacote selecionado",
+					duration: environment.poNotificationDuration,
+				})
+				return
+			}
+			if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === "edit") {
+				this.subscriptions.add(
+					this.restService.put(`/espelhos-carga/${this.id}`, data).subscribe({
+						next: () => {
+							this.poNotification.success({
+								message: this.literals.saveSuccess,
+								duration: environment.poNotificationDuration,
+							})
+
+							if (willCreateAnother) {
+								this.tipoPortaForm.reset()
+								this.router.navigate(["espelhos-carga/new"])
+							} else {
+								this.router.navigate(["espelhos-carga"])
+							}
+						},
+						error: (error) => console.log(error),
+					})
+				)
+			} else {
+				this.subscriptions.add(
+					this.restService.post("/espelhos-carga", data).subscribe({
+						next: () => {
+							this.poNotification.success({
+								message: this.literals.saveSuccess,
+								duration: environment.poNotificationDuration,
+							})
+
+							if (willCreateAnother) {
+								this.tipoPortaForm.reset()
+								this.router.navigate(["espelhos-carga/new"])
+							} else {
+								this.router.navigate(["espelhos-carga"])
+							}
+						},
+						error: (error) => console.log(error),
+					})
+				)
+			}
+		} else {
+			this.markAsDirty()
+			this.poNotification.warning({
+				message: this.literals.formError,
+				duration: environment.poNotificationDuration,
+			})
+		}
+	}
+
+	markAsDirty() {
+		this.tipoPortaForm.controls.pedidoId.markAsDirty()
+		this.tipoPortaForm.controls.placa.markAsDirty()
+		this.tipoPortaForm.controls.motorista.markAsDirty()
+		this.tipoPortaForm.controls.lote.markAsDirty()
+		this.tipoPortaForm.controls.descricao.markAsDirty()
+	}
+
+	goBack() {
+		this.router.navigate(["tipos-porta"])
+	}
+
+	adicionarPacotes() {
+		const pacoteIds = this.tipoPortaForm.get("pacoteId").value
+
+		if (!pacoteIds || pacoteIds.length === 0) {
+			console.log("Nenhum pacote selecionado")
+			return
+		}
+
+		const requests = pacoteIds.map((pacote: any) => this.restService.get(`/pacotes/${pacote}`))
+
+		forkJoin(requests).subscribe({
+			next: (pacotes) => {
+				const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+				pacotes.forEach((pacote: any) => {
+					if (espelhoCargaItems.value.some((item: any) => item.id === pacote.id)) {
+						return
+					} else {
+						espelhoCargaItems.push(
+							this.formBuilder.group({
+								id: pacote.id,
+								descricao: pacote.descricao,
+								items: this.formBuilder.array(this.getPacoteItems(pacote)),
+							})
+						)
+					}
+				})
+				this.tipoPortaForm.patchValue({
+					pedidoId: null,
+					pacoteId: [],
+				})
+			},
+			error: (error) => console.log(error),
+		})
+	}
+
+	getPacoteItems(pacote) {
+		return pacote.items.map((item: any) => {
+			return this.formBuilder.group({
+				id: item.id,
+				produto: item.produto,
+				produto_nome: item.produto_nome,
+				quantidade: item.quantidade,
+			})
+		})
+	}
+
+	hasItems = (rowItem: any): boolean => {
+		const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+		const pacoteIndex = espelhoCargaItems.value.findIndex((item: any) => item.id === rowItem.id)
+		if (pacoteIndex === -1) return false
+
+		const pacoteFormGroup = espelhoCargaItems.at(pacoteIndex)
+		const items = pacoteFormGroup.get("items") as FormArray
+		return items && items.length > 0
+	}
+
+	getPacoteItemsArray = (rowItem: any): any[] => {
+		const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+		const pacoteIndex = espelhoCargaItems.value.findIndex((item: any) => item.id === rowItem.id)
+		if (pacoteIndex === -1) return []
+
+		const pacoteFormGroup = espelhoCargaItems.at(pacoteIndex)
+		const items = pacoteFormGroup.get("items") as FormArray
+		return items ? items.value : []
+	}
+
+	removeItemTable(rowItem: any) {
+		const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+		const index = espelhoCargaItems.value.findIndex((item: any) => item.id === rowItem.id)
+		if (index > -1) {
+			espelhoCargaItems.removeAt(index)
+		}
+	}
 }

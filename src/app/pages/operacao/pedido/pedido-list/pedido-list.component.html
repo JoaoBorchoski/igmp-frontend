@@ -1,85 +1,89 @@
 <div>
-    <po-loading-overlay [hidden]="isHideLoading"></po-loading-overlay>
+	<po-loading-overlay [hidden]="isHideLoading"></po-loading-overlay>
 </div>
 <app-custom-table
-    [pageTitle]="this.literals.title"
-    route="pedidos"
-    [initialFields]="initialFields"
-    [customPageActions]="customPageActions"
+	[pageTitle]="this.literals.title"
+	route="pedidos"
+	[initialFields]="initialFields"
+	[customPageActions]="customPageActions"
 >
 </app-custom-table>
 
 <app-import-excel-modal
-    #modal
-    [title]="literals.fields.list['importModalTitle']"
-    [selectFileName]="literals.fields.list['selectFile']"
-    [noFileSelected]="literals.fields.list['noFileSelected']"
-    [cancel]="literals.fields.list['cancel']"
-    [import]="literals.fields.list['import']"
-    [uploadRoute]="uploadRoute"
-    [downloadRoute]="downloadRoute"
-    [downloadExcelFileName]="downloadExcelFileName"
-    [download]="literals.fields.list['download']"
-    [isHideLoading]="isHideLoading"
-    (import-success)="importSuccess()"
-    (result-itens)="handleResultItens($event)"
+	#modal
+	[title]="literals.fields.list['importModalTitle']"
+	[selectFileName]="literals.fields.list['selectFile']"
+	[noFileSelected]="literals.fields.list['noFileSelected']"
+	[cancel]="literals.fields.list['cancel']"
+	[import]="literals.fields.list['import']"
+	[uploadRoute]="uploadRoute"
+	[downloadRoute]="downloadRoute"
+	[downloadExcelFileName]="downloadExcelFileName"
+	[download]="literals.fields.list['download']"
+	[isHideLoading]="isHideLoading"
+	(import-success)="importSuccess()"
+	(result-itens)="handleResultItens($event)"
 >
 </app-import-excel-modal>
 
 <div *ngIf="showModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Detalhes do Pedido</h3>
-            <button class="close-btn" (click)="closeModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form [formGroup]="pedidoReturnForm">
-                <div formArrayName="itemsCriados">
-                    <div *ngFor="let item of itemsCriadosArray.controls; let i = index" [formGroupName]="i" class="item-form">
-                        <div class="item-header">
-                            <h4>{{ getItemValue(i, "produto") }}</h4>
-                        </div>
-                        <div class="item-fields">
-                            <div class="field-group">
-                                <label>Torre:</label>
-                                <input type="text" formControlName="torre" class="form-control" />
-                            </div>
-                            <div class="field-group">
-                                <label>Andar:</label>
-                                <input type="number" formControlName="andar" class="form-control" />
-                            </div>
-                            <div class="field-group">
-                                <label>Apto:</label>
-                                <input type="number" formControlName="apto" class="form-control" />
-                            </div>
-                            <div class="field-group">
-                                <label>Ambiente:</label>
-                                <input type="text" formControlName="ambiente" class="form-control" />
-                            </div>
-                        </div>
-                        <hr />
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-            <button class="btn btn-primary" (click)="saveForm()">Salvar</button>
-        </div>
-    </div>
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3>Detalhes do Pedido</h3>
+			<button class="close-btn" (click)="closeModal()">&times;</button>
+		</div>
+		<div class="modal-body">
+			<form [formGroup]="pedidoReturnForm">
+				<div formArrayName="itemsCriados">
+					<div
+						*ngFor="let item of itemsCriadosArray.controls; let i = index"
+						[formGroupName]="i"
+						class="item-form"
+					>
+						<div class="item-header">
+							<h4>{{ getItemValue(i, "produto") }}</h4>
+						</div>
+						<div class="item-fields">
+							<div class="field-group">
+								<label>Torre:</label>
+								<input type="text" formControlName="torre" class="form-control" />
+							</div>
+							<div class="field-group">
+								<label>Andar:</label>
+								<input type="number" formControlName="andar" class="form-control" />
+							</div>
+							<div class="field-group">
+								<label>Apto:</label>
+								<input type="number" formControlName="apto" class="form-control" />
+							</div>
+							<div class="field-group">
+								<label>Ambiente:</label>
+								<input type="text" formControlName="ambiente" class="form-control" />
+							</div>
+						</div>
+						<hr />
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+			<button class="btn btn-primary" (click)="saveForm()">Salvar</button>
+		</div>
+	</div>
 </div>
 
 <div *ngIf="showCloseConfirmation" class="modal-overlay">
-    <div class="confirmation-modal">
-        <div class="confirmation-header">
-            <h3>Confirmar Fechamento</h3>
-        </div>
-        <div class="confirmation-body">
-            <p>Tem certeza que deseja fechar o modal?</p>
-        </div>
-        <div class="confirmation-footer">
-            <button class="btn btn-secondary" (click)="cancelClose()">Cancelar</button>
-            <button class="btn btn-primary" (click)="confirmClose()">Confirmar</button>
-        </div>
-    </div>
+	<div class="confirmation-modal">
+		<div class="confirmation-header">
+			<h3>Confirmar Fechamento</h3>
+		</div>
+		<div class="confirmation-body">
+			<p>Tem certeza que deseja fechar o modal?</p>
+		</div>
+		<div class="confirmation-footer">
+			<button class="btn btn-secondary" (click)="cancelClose()">Cancelar</button>
+			<button class="btn btn-primary" (click)="confirmClose()">Confirmar</button>
+		</div>
+	</div>
 </div>

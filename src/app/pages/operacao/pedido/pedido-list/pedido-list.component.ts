@@ -269,7 +269,6 @@ export class PedidoListComponent implements OnInit {
 			unidade: [item?.unidade || null],
 			quantidadeTotal: [item?.quantidadeTotal || null],
 			pacoteId: [item?.pacoteId || null],
-
 			torre: [item?.torre || ""],
 			andar: [item?.andar || ""],
 			apto: [item?.apto || ""],
@@ -292,7 +291,7 @@ export class PedidoListComponent implements OnInit {
 		this.showCloseConfirmation = false
 	}
 
-	public saveForm() {
+	public saveForm(directSave = false) {
 		if (this.pedidoReturnForm.valid) {
 			const formData = this.pedidoReturnForm.value
 
@@ -300,18 +299,22 @@ export class PedidoListComponent implements OnInit {
 				next: (res) => {
 					this.showModal = false
 
-					this.excelService.createDownloadPdf(
-						res,
-						`pedido-${new Date().toLocaleTimeString("pt-BR", {
-							hour: "2-digit",
-							minute: "2-digit",
-						})}-${new Date().toLocaleDateString("pt-BR", {
-							year: "numeric",
-							month: "2-digit",
-							day: "2-digit",
-						})}`
-					)
-					this.poNotification.success("Pedido importado com sucesso!")
+					if (!directSave) {
+						this.excelService.createDownloadPdf(
+							res,
+							`pedido-${new Date().toLocaleTimeString("pt-BR", {
+								hour: "2-digit",
+								minute: "2-digit",
+							})}-${new Date().toLocaleDateString("pt-BR", {
+								year: "numeric",
+								month: "2-digit",
+								day: "2-digit",
+							})}`
+						)
+
+						this.poNotification.success("Pedido importado com sucesso!")
+					}
+
 					this.customTable.updateItems()
 				},
 				error: (error) => {
@@ -364,12 +367,16 @@ export class PedidoListComponent implements OnInit {
 			itens: event.itens,
 		})
 
-		this.itemsCriadosArray.clear()
-		if (event.itemsCriados && Array.isArray(event.itemsCriados)) {
-			event.itemsCriados.forEach((item: any) => {
-				this.addItemToForm(item)
-			})
+		if (event.itemsCriados.length == 0) {
+			this.saveForm(true)
+		} else {
+			this.itemsCriadosArray.clear()
+			if (event.itemsCriados && Array.isArray(event.itemsCriados)) {
+				event.itemsCriados.forEach((item: any) => {
+					this.addItemToForm(item)
+				})
+			}
+			this.showModal = true
 		}
-		this.showModal = true
 	}
 }

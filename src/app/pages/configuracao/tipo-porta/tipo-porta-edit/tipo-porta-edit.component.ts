@@ -25,6 +25,7 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	public readonly = false
 	public result: any
 	public literals: any = {}
+	public editMode = false
 
 	public readonly serviceApi = `${environment.baseUrl}/espelhos-carga`
 	public pedidoIdService = `${environment.baseUrl}/pedidos/select`
@@ -46,6 +47,26 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	public readonly columnsTableItems = [
 		{ property: "id", key: true, visible: false },
 		{ property: "descricao", label: "Descrição" },
+		{
+			property: "confirmado",
+			label: "Carregado",
+			width: "10%",
+			type: "subtitle",
+			subtitles: [
+				{
+					value: true,
+					color: "color-10",
+					label: "Sim",
+					content: "S",
+				},
+				{
+					value: false,
+					color: "color-07",
+					label: "Não",
+					content: "N",
+				},
+			],
+		},
 	]
 
 	public readonly columnsTablePacoteItems = [
@@ -81,7 +102,12 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 
 		if (this.id) {
 			this.subscriptions.add(this.getTipoPorta(this.id))
+			this.editMode = true
 		}
+	}
+
+	ngAfterViewInit(): void {
+		this.tableActions[0].disabled = this.editMode
 	}
 
 	ngOnDestroy(): void {
@@ -149,6 +175,7 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 						this.formBuilder.group({
 							id: pacote.id,
 							descricao: pacote.descricao,
+							confirmado: pacote.confirmado,
 							items: this.formBuilder.array(
 								pacote.items.map((item: any) =>
 									this.formBuilder.group({

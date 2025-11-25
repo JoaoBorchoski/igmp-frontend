@@ -28,6 +28,26 @@ export class TipoPortaListComponent implements OnInit {
 						{ property: "descricao", label: this.literals.fields.list["descricao"] },
 						{ property: "placa", label: this.literals.fields.list["placa"] },
 						{ property: "motorista", label: this.literals.fields.list["motorista"] },
+						{
+							property: "confirmado",
+							label: "Carregado",
+							width: "10%",
+							type: "subtitle",
+							subtitles: [
+								{
+									value: true,
+									color: "color-10",
+									label: "Sim",
+									content: "S",
+								},
+								{
+									value: false,
+									color: "color-07",
+									label: "Não",
+									content: "N",
+								},
+							],
+						},
 					]),
 			})
 	}

@@ -1,187 +1,190 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from "@angular/common/http"
 import { Component, OnDestroy, OnInit } from "@angular/core"
-import { ActivatedRoute, Router } from '@angular/router'
-import { PoDynamicFormField, PoPageAction, PoNotificationService, PoNotification } from '@po-ui/ng-components'
-import { FormBuilder } from '@angular/forms'
-import { Subscription } from 'rxjs'
+import { ActivatedRoute, Router } from "@angular/router"
+import { PoDynamicFormField, PoPageAction, PoNotificationService, PoNotification } from "@po-ui/ng-components"
+import { FormBuilder } from "@angular/forms"
+import { Subscription } from "rxjs"
 import { environment } from "src/environments/environment"
 import { RestService } from "src/app/services/rest.service"
-import { LanguagesService } from 'src/app/services/languages.service'
+import { LanguagesService } from "src/app/services/languages.service"
 
 @Component({
-  selector: "app-tipo-enchimento-edit",
-  templateUrl: "./tipo-enchimento-edit.component.html",
-  styleUrls: ["./tipo-enchimento-edit.component.scss"],
+	selector: "app-tipo-enchimento-edit",
+	templateUrl: "./tipo-enchimento-edit.component.html",
+	styleUrls: ["./tipo-enchimento-edit.component.scss"],
 })
 export class TipoEnchimentoEditComponent implements OnInit, OnDestroy {
-  public id: string
-  public readonly = false
-  public result: any
-  public literals: any = {}
+	public id: string
+	public readonly = false
+	public result: any
+	public literals: any = {}
 
-  tipoEnchimentoForm = this.formBuilder.group({
-    nome: '',
-    descricao: '',
-  })
+	tipoEnchimentoForm = this.formBuilder.group({
+		nome: "",
+		descricao: "",
+		tipo: "",
+	})
 
-  public readonly serviceApi = `${environment.baseUrl}/tipos-enchimento`
+	public tipoOptions = [
+		{ label: "Peça Final", value: 0 },
+		{ label: "Kit", value: 1 },
+		{ label: "Opcional", value: 2 },
+	]
 
-  subscriptions = new Subscription()
+	public readonly serviceApi = `${environment.baseUrl}/produtos`
 
-  public readonly pageActions: Array<PoPageAction> = []
+	subscriptions = new Subscription()
 
-  constructor(
-    private formBuilder: FormBuilder,
-    public httpClient: HttpClient,
-    public restService: RestService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private poNotification: PoNotificationService,
-    private languagesService: LanguagesService
-  ) { }
+	public readonly pageActions: Array<PoPageAction> = []
 
-  ngOnInit(): void {
-    this.getLiterals()
+	constructor(
+		private formBuilder: FormBuilder,
+		public httpClient: HttpClient,
+		public restService: RestService,
+		private activatedRoute: ActivatedRoute,
+		private router: Router,
+		private poNotification: PoNotificationService,
+		private languagesService: LanguagesService
+	) {}
 
-    this.id = this.activatedRoute.snapshot.paramMap.get("id")
+	ngOnInit(): void {
+		this.getLiterals()
 
-    this.pageButtonsBuilder(this.getPageType(this.activatedRoute.snapshot.routeConfig.path))
+		this.id = this.activatedRoute.snapshot.paramMap.get("id")
 
-    if (this.id) {
-      this.subscriptions.add(this.getTipoEnchimento(this.id))
-    }
-  }
+		this.pageButtonsBuilder(this.getPageType(this.activatedRoute.snapshot.routeConfig.path))
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe()
-  }
+		if (this.id) {
+			this.subscriptions.add(this.getTipoEnchimento(this.id))
+		}
+	}
 
-  getLiterals() {
-    this.languagesService.getLiterals({ type: 'edit', module: 'configuracao', options: 'tipoEnchimento'})
-      .subscribe({
-        next: res => this.literals = res
-      })
-  }
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe()
+	}
 
-  getPageType(route: string): string {
-    switch (route) {
-      case 'new':
-        return 'new'
-      case 'new/:id':
-        return 'new'
-      case 'edit':
-        return 'edit'
-      case 'edit/:id':
-        return 'edit'
-      case 'view/:id':
-        return 'view'
-    }
-  }
+	getLiterals() {
+		this.languagesService
+			.getLiterals({ type: "edit", module: "configuracao", options: "tipoEnchimento" })
+			.subscribe({
+				next: (res) => (this.literals = res),
+			})
+	}
 
-  pageButtonsBuilder(pageType: string): null {
-    if (pageType === 'view') {
-      this.readonly = true
+	getPageType(route: string): string {
+		switch (route) {
+			case "new":
+				return "new"
+			case "new/:id":
+				return "new"
+			case "edit":
+				return "edit"
+			case "edit/:id":
+				return "edit"
+			case "view/:id":
+				return "view"
+		}
+	}
 
-      this.pageActions.push(
-        {
-          label: this.literals.return,
-          action: this.goBack.bind(this),
-        }
-      )
-      return
-    }
+	pageButtonsBuilder(pageType: string): null {
+		if (pageType === "view") {
+			this.readonly = true
 
-    this.pageActions.push(
-      {
-        label: this.literals.save,
-        action: () => this.save(this.tipoEnchimentoForm.value)
-      },
-      {
-        label: this.literals.saveAndNew,
-        action: () => this.save(this.tipoEnchimentoForm.value, true)
-      },
-      {
-        label: this.literals.cancel,
-        action: this.goBack.bind(this),
-      }
-    )
+			this.pageActions.push({
+				label: this.literals.return,
+				action: this.goBack.bind(this),
+			})
+			return
+		}
 
-    return
-  }
+		this.pageActions.push(
+			{
+				label: this.literals.save,
+				action: () => this.save(this.tipoEnchimentoForm.value),
+			},
+			{
+				label: this.literals.saveAndNew,
+				action: () => this.save(this.tipoEnchimentoForm.value, true),
+			},
+			{
+				label: this.literals.cancel,
+				action: this.goBack.bind(this),
+			}
+		)
 
-  getTipoEnchimento(id: string) {
-    this.restService
-      .get(`/tipos-enchimento/${id}`)
-      .subscribe({
-        next: (result) => {
-          this.tipoEnchimentoForm.patchValue({
-            nome: result.nome,
-            descricao: result.descricao,
-          })
-        },
-        error: (error) => console.log(error)
-      })
-  }
+		return
+	}
 
-  save(data, willCreateAnother?: boolean) {
-    if (this.tipoEnchimentoForm.valid) {
-      if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === 'edit') {
-        this.subscriptions.add(
-          this.restService
-            .put(`/tipos-enchimento/${this.id}`, data)
-            .subscribe({
-              next: () => {
-                this.poNotification.success({
-                  message: this.literals.saveSuccess,
-                  duration: environment.poNotificationDuration
-                })
+	getTipoEnchimento(id: string) {
+		this.restService.get(`/produtos/${id}`).subscribe({
+			next: (result) => {
+				this.tipoEnchimentoForm.patchValue({
+					nome: result.nome,
+					descricao: result.descricao,
+					tipo: result.tipo,
+				})
+			},
+			error: (error) => console.log(error),
+		})
+	}
 
-                if (willCreateAnother) {
-                  this.tipoEnchimentoForm.reset()
-                  this.router.navigate(["tipos-enchimento/new"])
-                } else {
-                  this.router.navigate(["tipos-enchimento"])
-                }
-              },
-              error: (error) => console.log(error),
-            })
-        )
-      } else {
-        this.subscriptions.add(
-          this.restService
-            .post("/tipos-enchimento", data)
-            .subscribe({
-              next: () => {
-                this.poNotification.success({
-                  message: this.literals.saveSuccess,
-                  duration: environment.poNotificationDuration
-                })
+	save(data, willCreateAnother?: boolean) {
+		if (this.tipoEnchimentoForm.valid) {
+			if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === "edit") {
+				this.subscriptions.add(
+					this.restService.put(`/produtos/${this.id}`, data).subscribe({
+						next: () => {
+							this.poNotification.success({
+								message: this.literals.saveSuccess,
+								duration: environment.poNotificationDuration,
+							})
 
-                if (willCreateAnother) {
-                  this.tipoEnchimentoForm.reset()
-                  this.router.navigate(["tipos-enchimento/new"])
-                } else {
-                  this.router.navigate(["tipos-enchimento"])
-                }
-              },
-              error: (error) => console.log(error),
-            })
-        )
-      }
-    } else {
-      this.markAsDirty()
-      this.poNotification.warning({
-        message: this.literals.formError,
-        duration: environment.poNotificationDuration
-      })
-    }
-  }
+							if (willCreateAnother) {
+								this.tipoEnchimentoForm.reset()
+								this.router.navigate(["produtos/new"])
+							} else {
+								this.router.navigate(["produtos"])
+							}
+						},
+						error: (error) => console.log(error),
+					})
+				)
+			} else {
+				this.subscriptions.add(
+					this.restService.post("/produtos", data).subscribe({
+						next: () => {
+							this.poNotification.success({
+								message: this.literals.saveSuccess,
+								duration: environment.poNotificationDuration,
+							})
 
-  markAsDirty() {
-    this.tipoEnchimentoForm.controls.nome.markAsDirty()
-  }
+							if (willCreateAnother) {
+								this.tipoEnchimentoForm.reset()
+								this.router.navigate(["produtos/new"])
+							} else {
+								this.router.navigate(["produtos"])
+							}
+						},
+						error: (error) => console.log(error),
+					})
+				)
+			}
+		} else {
+			this.markAsDirty()
+			this.poNotification.warning({
+				message: this.literals.formError,
+				duration: environment.poNotificationDuration,
+			})
+		}
+	}
 
-  goBack() {
-    this.router.navigate(["tipos-enchimento"])
-  }
+	markAsDirty() {
+		this.tipoEnchimentoForm.controls.nome.markAsDirty()
+		this.tipoEnchimentoForm.controls.descricao.markAsDirty()
+		this.tipoEnchimentoForm.controls.tipo.markAsDirty()
+	}
+
+	goBack() {
+		this.router.navigate(["produtos"])
+	}
 }

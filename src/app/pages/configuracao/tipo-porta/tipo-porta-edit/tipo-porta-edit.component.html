@@ -1,4 +1,13 @@
 <po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
+	<div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
+		<po-button
+			p-label="Exportar Espelho de Carga"
+			(p-click)="exportarEspelhoCarga()"
+			class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-mb-2"
+			p-kind="primary"
+		>
+		</po-button>
+	</div>
 	<form [formGroup]="tipoPortaForm">
 		<div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
 			<po-input

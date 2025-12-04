@@ -208,7 +208,7 @@ export const generalPt = {
 		fields: padroesCoresFields,
 	},
 	configuracao_tipoEnchimento: {
-		title: "Tipos Enchimento",
+		title: "Produtos",
 		fields: tiposEnchimentoFields,
 	},
 	configuracao_sentidoAbertura: {

@@ -102,7 +102,7 @@ const routes: Routes = [
 					import("./modules/configuracao/padrao-cor/padrao-cor.module").then((m) => m.PadraoCorModule),
 			},
 			{
-				path: "tipos-enchimento",
+				path: "produtos",
 				loadChildren: () =>
 					import("./modules/configuracao/tipo-enchimento/tipo-enchimento.module").then(
 						(m) => m.TipoEnchimentoModule
@@ -164,11 +164,11 @@ const routes: Routes = [
 				loadChildren: () =>
 					import("./modules/operacao/pacote-item/pacote-item.module").then((m) => m.PacoteItemModule),
 			},
-			{
-				path: "produtos",
-				loadChildren: () =>
-					import("./modules/operacao/pacote-item/pacote-item.module").then((m) => m.PacoteItemModule),
-			},
+			// {
+			// 	path: "produtos",
+			// 	loadChildren: () =>
+			// 		import("./modules/operacao/pacote-item/pacote-item.module").then((m) => m.PacoteItemModule),
+			// },
 			{
 				path: "cadastro-obras",
 				loadChildren: () =>

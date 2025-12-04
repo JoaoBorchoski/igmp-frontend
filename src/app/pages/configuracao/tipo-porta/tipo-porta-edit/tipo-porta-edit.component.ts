@@ -344,4 +344,13 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 			espelhoCargaItems.removeAt(index)
 		}
 	}
+
+	exportarEspelhoCarga() {
+		this.restService.get(`/espelhos-carga/export/${this.id}`).subscribe({
+			next: (result) => {
+				console.log("result", result)
+			},
+			error: (error) => console.log(error),
+		})
+	}
 }

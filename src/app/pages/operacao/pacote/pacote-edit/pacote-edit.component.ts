@@ -31,7 +31,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	public literals: any = {}
 
 	public tableActions: PoTableAction[] = [
-		{ label: "Editar", action: this.editParameterItem.bind(this), icon: "fa-solid fa-pen" },
+		// { label: "Editar", action: this.editParameterItem.bind(this), icon: "fa-solid fa-pen" },
 		{ label: "Excluir", action: this.deleteParameterItem.bind(this), icon: "fa-solid fa-trash" },
 	]
 
@@ -83,6 +83,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 		quantidadeLateral: null,
 		quantidadeCabeceira: null,
 		quantidadeLateralCabeceira: null,
+		descricao: "",
 	})
 
 	pacoteItemsFormEdit = this.formBuilder.group({
@@ -277,10 +278,10 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 							this.excelService.createDownloadPdf(result, `pacote-${data.id || data.pedidoId}`)
 
 							if (willCreateAnother) {
-								this.pacoteForm.reset()
-								this.router.navigate(["pacotes/new"])
+								// this.pacoteForm.reset()
+								// this.router.navigate(["pacotes/new"])
 							} else {
-								this.router.navigate(["pacotes"])
+								// this.router.navigate(["pacotes"])
 							}
 						},
 						error: (error) => console.log(error),

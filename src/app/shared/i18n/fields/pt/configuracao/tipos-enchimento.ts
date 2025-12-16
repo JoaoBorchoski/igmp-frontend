@@ -6,7 +6,7 @@ export const tiposEnchimentoFields = {
 		estadoUf: "UF",
 		estadoId: "UF",
 		import: "Importar",
-		importModalTitle: "Importar Pedidos",
+		importModalTitle: "Importar Produtos",
 		selectFile: "Selecione um arquivo",
 		noFileSelected: "Nenhum arquivo selecionado",
 		cancel: "Cancelar",

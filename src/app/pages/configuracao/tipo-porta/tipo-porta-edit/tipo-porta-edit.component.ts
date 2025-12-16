@@ -14,6 +14,7 @@ import { Subscription, forkJoin } from "rxjs"
 import { environment } from "src/environments/environment"
 import { RestService } from "src/app/services/rest.service"
 import { LanguagesService } from "src/app/services/languages.service"
+import { ExcelService } from "src/app/services/excel.service"
 
 @Component({
 	selector: "app-tipo-porta-edit",
@@ -90,7 +91,8 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private poNotification: PoNotificationService,
-		private languagesService: LanguagesService
+		private languagesService: LanguagesService,
+		private excelService: ExcelService
 	) {}
 
 	ngOnInit(): void {
@@ -348,7 +350,17 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	exportarEspelhoCarga() {
 		this.restService.get(`/espelhos-carga/export/${this.id}`).subscribe({
 			next: (result) => {
-				console.log("result", result)
+				this.excelService.createDownloadPdf(
+					result,
+					`registro-embarque-${new Date().toLocaleTimeString("pt-BR", {
+						hour: "2-digit",
+						minute: "2-digit",
+					})}-${new Date().toLocaleDateString("pt-BR", {
+						year: "numeric",
+						month: "2-digit",
+						day: "2-digit",
+					})}`
+				)
 			},
 			error: (error) => console.log(error),
 		})

@@ -1,53 +1,23 @@
 <po-page-default [p-title]="this.literals.title" [p-actions]="pageActions">
 	<div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-		<po-button
-			p-label="Exportar Espelho de Carga"
-			(p-click)="exportarEspelhoCarga()"
-			class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-mb-2"
-			p-kind="primary"
-			*ngIf="this.id"
-		>
+		<po-button p-label="Exportar Espelho de Carga" (p-click)="exportarEspelhoCarga()" class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-mb-2" p-kind="primary" *ngIf="this.id">
 		</po-button>
 	</div>
 	<form [formGroup]="tipoPortaForm">
 		<div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-			<po-input
-				class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
-				formControlName="descricao"
-				name="descricao"
-				p-label="Descrição"
-				p-required
-			></po-input>
+			<po-input class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required" formControlName="descricao" name="descricao" p-label="Descrição" p-required></po-input>
 		</div>
 
 		<div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-			<po-input
-				class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
-				formControlName="motorista"
-				name="motorista"
-				p-label="Motorista"
-				p-required
-			></po-input>
+			<po-input class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required" formControlName="motorista" name="motorista" p-label="Motorista" p-required></po-input>
 		</div>
 
 		<div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding">
-			<po-input
-				class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
-				formControlName="placa"
-				name="placa"
-				p-label="Placa"
-				p-required
-			></po-input>
+			<po-input class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required" formControlName="placa" name="placa" p-label="Placa" p-required></po-input>
 		</div>
 
 		<div class="po-sm-12 po-md-12 po-lg-6 po-xl-6 no-padding">
-			<po-input
-				class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required"
-				formControlName="lote"
-				name="lote"
-				p-label="Lote"
-				p-required
-			></po-input>
+			<po-input class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-required" formControlName="lote" name="lote" p-label="Lote" p-required></po-input>
 		</div>
 
 		<div class="po-sm-12 po-md-6 po-lg-6 po-xl-6 no-padding">
@@ -83,12 +53,7 @@
 		</div>
 
 		<div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding po-mt-2">
-			<po-button
-				class="po-sm-12 po-md-12 po-lg-12 po-xl-12"
-				p-label="Adicionar Pacotes  "
-				(p-click)="adicionarPacotes()"
-				[p-disabled]="!tipoPortaForm.get('pacoteId').value"
-			>
+			<po-button class="po-sm-12 po-md-12 po-lg-12 po-xl-12" p-label="Adicionar Pacotes  " (p-click)="adicionarPacotes()" [p-disabled]="!tipoPortaForm.get('pacoteId').value">
 			</po-button>
 		</div>
 
@@ -104,21 +69,10 @@
 				p-actions-right="true"
 				[p-auto-collapse]="true"
 			>
-				<ng-template
-					p-table-row-template
-					let-rowItem
-					let-i="rowIndex"
-					[p-table-row-template-arrow-direction]="'right'"
-					[p-table-row-template-show]="hasItems"
-				>
+				<ng-template p-table-row-template let-rowItem let-i="rowIndex" [p-table-row-template-arrow-direction]="'right'" [p-table-row-template-show]="hasItems">
 					<po-widget p-title="Itens do Pacote {{ rowItem.descricao }}">
 						<div class="po-sm-12 po-md-12 po-lg-12 po-xl-12 no-padding">
-							<po-table
-								[p-columns]="columnsTablePacoteItems"
-								[p-items]="getPacoteItemsArray(rowItem)"
-								[p-striped]="true"
-							>
-							</po-table>
+							<po-table [p-columns]="columnsTablePacoteItems" [p-items]="getPacoteItemsArray(rowItem)" [p-striped]="true"> </po-table>
 						</div>
 					</po-widget>
 				</ng-template>

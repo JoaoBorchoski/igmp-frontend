@@ -1,6 +1,6 @@
-import { HttpClient } from "@angular/common/http"
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core"
-import { ActivatedRoute, Router } from "@angular/router"
+import { HttpClient } from '@angular/common/http'
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
 import {
 	PoDynamicFormField,
 	PoPageAction,
@@ -11,18 +11,18 @@ import {
 	PoModalComponent,
 	PoTableComponent,
 	PoModalAction,
-} from "@po-ui/ng-components"
-import { FormArray, FormBuilder } from "@angular/forms"
-import { Subscription } from "rxjs"
-import { environment } from "src/environments/environment"
-import { RestService } from "src/app/services/rest.service"
-import { LanguagesService } from "src/app/services/languages.service"
-import { ExcelService } from "src/app/services/excel.service"
+} from '@po-ui/ng-components'
+import { FormArray, FormBuilder } from '@angular/forms'
+import { Subscription } from 'rxjs'
+import { environment } from 'src/environments/environment'
+import { RestService } from 'src/app/services/rest.service'
+import { LanguagesService } from 'src/app/services/languages.service'
+import { ExcelService } from 'src/app/services/excel.service'
 
 @Component({
-	selector: "app-pacote-edit",
-	templateUrl: "./pacote-edit.component.html",
-	styleUrls: ["./pacote-edit.component.scss"],
+	selector: 'app-pacote-edit',
+	templateUrl: './pacote-edit.component.html',
+	styleUrls: ['./pacote-edit.component.scss'],
 })
 export class PacoteEditComponent implements OnInit, OnDestroy {
 	public id: string
@@ -32,33 +32,33 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 
 	public tableActions: PoTableAction[] = [
 		// { label: "Editar", action: this.editParameterItem.bind(this), icon: "fa-solid fa-pen" },
-		{ label: "Excluir", action: this.deleteParameterItem.bind(this), icon: "fa-solid fa-trash" },
+		{ label: 'Excluir', action: this.deleteParameterItem.bind(this), icon: 'fa-solid fa-trash' },
 	]
 
 	public deleteItemName: string
 	public deleteItemObj: any
 
 	@ViewChild(PoModalComponent, { static: true }) poModal: PoModalComponent
-	@ViewChild("poModalDelete", { static: true }) poModalDelete: PoModalComponent
+	@ViewChild('poModalDelete', { static: true }) poModalDelete: PoModalComponent
 	@ViewChild(PoTableComponent) table: PoTableComponent
 
 	public primaryActionDelete: PoModalAction = {
-		label: "Excluir",
+		label: 'Excluir',
 		action: () => this.deleteItem(),
 	}
 
 	public secondaryActionDelete: PoModalAction = {
-		label: "Cancelar",
+		label: 'Cancelar',
 		action: () => this.poModalDelete.close(),
 	}
 
 	public primaryAction: PoModalAction = {
-		label: "Atualizar",
+		label: 'Atualizar',
 		action: () => this.editItem(),
 	}
 
 	public secondaryAction: PoModalAction = {
-		label: "Cancelar",
+		label: 'Cancelar',
 		action: () => {
 			this.pacoteItemsFormEdit.reset()
 			this.poModal.close()
@@ -66,44 +66,60 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	pacoteForm = this.formBuilder.group({
-		id: "",
+		id: '',
 		pedidoId: null,
-		descricao: "",
+		descricao: '',
+		cor: '',
 		pacoteItems: this.formBuilder.array([]),
 		pacoteTipo: 0,
 	})
 
 	pacoteItemsForm = this.formBuilder.group({
-		id: "",
+		id: '',
 		quantidade: null,
-		produtoId: "",
-		produto: "",
+		produtoId: '',
+		produto: '',
 		quantidadeDisponivel: null,
 		tipoItem: 0,
 		quantidadeLateral: null,
 		quantidadeCabeceira: null,
 		quantidadeLateralCabeceira: null,
-		descricao: "",
+		descricao: '',
 	})
 
 	pacoteItemsFormEdit = this.formBuilder.group({
-		id: "",
+		id: '',
 		quantidade: null,
-		produtoId: "",
-		produto: "",
+		produtoId: '',
+		produto: '',
 		quantidadeLateral: null,
 		quantidadeCabeceira: null,
 		quantidadeLateralCabeceira: null,
 	})
 
 	public pacoteTipos = [
-		{ label: "Pedido", value: 0 },
-		{ label: "Movimentação Interna", value: 1 },
+		{ label: 'Pedido', value: 0 },
+		{ label: 'Movimentação Interna', value: 1 },
 	]
 
 	public tipoItemOptions = [
-		{ label: "Conjunto", value: 0 },
-		{ label: "Peça Final", value: 1 },
+		{ label: 'Conjunto', value: 0 },
+		{ label: 'Peça Final', value: 1 },
+	]
+
+	public corOptions = [
+		{ label: 'Roxo', value: '#a503fc' },
+		{ label: 'Verde', value: '#299900' },
+		{ label: 'Cinza', value: '#8c8c8c' },
+		{ label: 'Vermelho', value: '#b80000' },
+		{ label: 'Laranja', value: '#d97000' },
+		{ label: 'Amarelo', value: '#d9bc00' },
+		{ label: 'Azul Petróleo', value: '#00778f' },
+		{ label: 'Verde Escuro', value: '#0b4f01' },
+		{ label: 'Ciano', value: '#02cdd4' },
+		{ label: 'Marrom', value: '#805003' },
+		{ label: 'Verde Lima', value: '#03fc0b' },
+		{ label: 'Marrom Escuro', value: '#3d2601' },
 	]
 
 	public readonly serviceApi = `${environment.baseUrl}/pacotes`
@@ -111,25 +127,25 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	public pedidoItemsIdService = `${environment.baseUrl}/pedidos-items/selectPedido`
 	public produtoIdService = `${environment.baseUrl}/produtos/select`
 
-	columnsFornecedor: Array<PoLookupColumn> = [{ property: "label", label: "Pedido" }]
+	columnsFornecedor: Array<PoLookupColumn> = [{ property: 'label', label: 'Pedido' }]
 
 	public readonly columnsTableItems = [
-		{ property: "id", key: true, visible: false },
-		{ property: "produto", label: "Produto" },
-		{ property: "quantidade", label: "Quantidade", width: "7%", type: "number" },
-		{ property: "quantidadeLateral", label: "Quantidade Lateral", width: "7%", type: "number" },
-		{ property: "quantidadeCabeceira", label: "Quantidade Cabeceira", width: "7%", type: "number" },
+		{ property: 'id', key: true, visible: false },
+		{ property: 'produto', label: 'Produto' },
+		{ property: 'quantidade', label: 'Quantidade', width: '7%', type: 'number' },
+		{ property: 'quantidadeLateral', label: 'Quantidade Lateral', width: '7%', type: 'number' },
+		{ property: 'quantidadeCabeceira', label: 'Quantidade Cabeceira', width: '7%', type: 'number' },
 		{
-			property: "quantidadeLateralCabeceira",
-			label: "Quantidade Lateral para cabeceira",
-			width: "7%",
-			type: "number",
+			property: 'quantidadeLateralCabeceira',
+			label: 'Quantidade Lateral para cabeceira',
+			width: '7%',
+			type: 'number',
 		},
 	]
 
 	columnsProduto: Array<PoLookupColumn> = [
-		{ property: "label", label: "Nome" },
-		{ property: "nome", label: "Código", width: "15%" },
+		{ property: 'label', label: 'Nome' },
+		{ property: 'nome', label: 'Código', width: '15%' },
 	]
 
 	subscriptions = new Subscription()
@@ -150,7 +166,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.getLiterals()
 
-		this.id = this.activatedRoute.snapshot.paramMap.get("id")
+		this.id = this.activatedRoute.snapshot.paramMap.get('id')
 
 		this.pageButtonsBuilder(this.getPageType(this.activatedRoute.snapshot.routeConfig.path))
 
@@ -164,28 +180,28 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	getLiterals() {
-		this.languagesService.getLiterals({ type: "edit", module: "operacao", options: "pacote" }).subscribe({
+		this.languagesService.getLiterals({ type: 'edit', module: 'operacao', options: 'pacote' }).subscribe({
 			next: (res) => (this.literals = res),
 		})
 	}
 
 	getPageType(route: string): string {
 		switch (route) {
-			case "new":
-				return "new"
-			case "new/:id":
-				return "new"
-			case "edit":
-				return "edit"
-			case "edit/:id":
-				return "edit"
-			case "view/:id":
-				return "view"
+			case 'new':
+				return 'new'
+			case 'new/:id':
+				return 'new'
+			case 'edit':
+				return 'edit'
+			case 'edit/:id':
+				return 'edit'
+			case 'view/:id':
+				return 'view'
 		}
 	}
 
 	pageButtonsBuilder(pageType: string): null {
-		if (pageType === "view") {
+		if (pageType === 'view') {
 			this.readonly = true
 
 			this.pageActions.push({
@@ -219,11 +235,12 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 				this.pacoteForm.patchValue({
 					pedidoId: result.pedidoId,
 					descricao: result.descricao,
+					cor: result.cor,
 					pacoteTipo: result.pedidoId ? 0 : 1,
 					pacoteItems: [],
 				})
 
-				const pacoteItems = this.pacoteForm.get("pacoteItems") as FormArray
+				const pacoteItems = this.pacoteForm.get('pacoteItems') as FormArray
 				result.items.forEach((item: any) => {
 					pacoteItems.push(
 						this.formBuilder.group({
@@ -244,8 +261,8 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	save(data, willCreateAnother?: boolean) {
-		if (this.pacoteForm.valid && this.pacoteForm.get("pacoteItems").value.length > 0) {
-			if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === "edit") {
+		if (this.pacoteForm.valid && this.pacoteForm.get('pacoteItems').value.length > 0) {
+			if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === 'edit') {
 				this.subscriptions.add(
 					this.restService.put(`/pacotes/${this.id}`, data).subscribe({
 						next: (result: Blob) => {
@@ -258,9 +275,9 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 
 							if (willCreateAnother) {
 								this.pacoteForm.reset()
-								this.router.navigate(["pacotes/new"])
+								this.router.navigate(['pacotes/new'])
 							} else {
-								this.router.navigate(["pacotes"])
+								this.router.navigate(['pacotes'])
 							}
 						},
 						error: (error) => console.log(error),
@@ -268,7 +285,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 				)
 			} else {
 				this.subscriptions.add(
-					this.restService.post("/pacotes", data).subscribe({
+					this.restService.post('/pacotes', data).subscribe({
 						next: (result: Blob) => {
 							this.poNotification.success({
 								message: this.literals.saveSuccess,
@@ -278,10 +295,10 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 							this.excelService.createDownloadPdf(result, `pacote-${data.id || data.pedidoId}`)
 
 							if (willCreateAnother) {
-								// this.pacoteForm.reset()
-								// this.router.navigate(["pacotes/new"])
+								this.pacoteForm.reset()
+								this.router.navigate(['pacotes/new'])
 							} else {
-								// this.router.navigate(["pacotes"])
+								this.router.navigate(['pacotes'])
 							}
 						},
 						error: (error) => console.log(error),
@@ -300,14 +317,14 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	downloadPDF(pdfBlob: Blob) {
 		if (pdfBlob && pdfBlob.size > 0) {
 			const url = window.URL.createObjectURL(pdfBlob)
-			const a = document.createElement("a")
+			const a = document.createElement('a')
 			a.href = url
-			a.download = "pacote.pdf" // Nome do arquivo PDF
+			a.download = 'pacote.pdf' // Nome do arquivo PDF
 			a.click()
 			window.URL.revokeObjectURL(url) // Libera o URL criado
 		} else {
-			console.error("Erro: O PDF não foi gerado corretamente.")
-			console.log("Blob:", pdfBlob)
+			console.error('Erro: O PDF não foi gerado corretamente.')
+			console.log('Blob:', pdfBlob)
 		}
 	}
 
@@ -316,7 +333,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	goBack() {
-		this.router.navigate(["pacotes"])
+		this.router.navigate(['pacotes'])
 	}
 
 	addItem() {
@@ -325,14 +342,14 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 
 			if (this.itemAlreadyExists(item)) {
 				this.poNotification.warning({
-					message: "Item já adicionado ao pacote.",
+					message: 'Item já adicionado ao pacote.',
 					duration: environment.poNotificationDuration,
 				})
 				return
 			}
 
 			// verificar isso aqui pq ta nada ver pqp
-			if (this.pacoteForm.get("pacoteTipo").value === 0) {
+			if (this.pacoteForm.get('pacoteTipo').value === 0) {
 				this.restService.get(`/pedidos-items/produto/${item.id}`).subscribe({
 					next: (result) => {
 						const newProduto = {
@@ -341,14 +358,14 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 							produtoId: result.produto,
 						}
 
-						const pedidoItems = this.pacoteForm.get("pacoteItems") as FormArray
+						const pedidoItems = this.pacoteForm.get('pacoteItems') as FormArray
 						pedidoItems.push(this.formBuilder.group(newProduto))
 
 						this.pacoteItemsForm.reset()
-						this.pacoteItemsForm.get("tipoItem").setValue(0)
+						this.pacoteItemsForm.get('tipoItem').setValue(0)
 					},
 					error: (error: any) => {
-						console.log("Erro ao buscar produto:", error)
+						console.log('Erro ao buscar produto:', error)
 						return null
 					},
 				})
@@ -361,13 +378,13 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 							produtoId: result.id,
 						}
 
-						const pedidoItems = this.pacoteForm.get("pacoteItems") as FormArray
+						const pedidoItems = this.pacoteForm.get('pacoteItems') as FormArray
 						pedidoItems.push(this.formBuilder.group(newProduto))
 
 						this.pacoteItemsForm.reset()
 					},
 					error: (error: any) => {
-						console.log("Erro ao buscar produto:", error)
+						console.log('Erro ao buscar produto:', error)
 						return null
 					},
 				})
@@ -381,7 +398,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	editParameterItem(item: any) {
-		console.log("Editando item:", item)
+		console.log('Editando item:', item)
 
 		this.pacoteItemsFormEdit.patchValue({
 			id: item.id,
@@ -392,7 +409,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	deleteParameterItem(item: any) {
-		const pedidoItems = this.pacoteForm.get("pacoteItems") as FormArray
+		const pedidoItems = this.pacoteForm.get('pacoteItems') as FormArray
 		const index = pedidoItems.controls.findIndex((ctrl: any) => ctrl.value.id === item.id)
 
 		this.deleteItemName = item.produto
@@ -402,7 +419,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	deleteItem() {
-		const pedidoItems = this.pacoteForm.get("pacoteItems") as FormArray
+		const pedidoItems = this.pacoteForm.get('pacoteItems') as FormArray
 		const index = pedidoItems.controls.findIndex((ctrl: any) => ctrl.value.id === this.deleteItemObj.id)
 
 		if (index > -1) {
@@ -414,7 +431,7 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 			})
 		} else {
 			this.poNotification.warning({
-				message: "Item não encontrado.",
+				message: 'Item não encontrado.',
 				duration: environment.poNotificationDuration,
 			})
 		}
@@ -425,23 +442,23 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	editItem() {
 		if (this.pacoteItemsFormEdit.valid) {
 			const item = this.pacoteItemsFormEdit.value
-			const itemsArray: any = this.pacoteForm.get("pacoteItems").value
+			const itemsArray: any = this.pacoteForm.get('pacoteItems').value
 			const index = itemsArray.findIndex((ctr: any) => ctr.id === item.id)
 
 			if (index > -1) {
 				itemsArray[index].quantidade = item.quantidade
 
-				this.pacoteForm.get("pacoteItems").setValue(itemsArray)
+				this.pacoteForm.get('pacoteItems').setValue(itemsArray)
 
 				this.pacoteItemsFormEdit.reset()
 
 				this.poNotification.success({
-					message: "Item atualizado com sucesso.",
+					message: 'Item atualizado com sucesso.',
 					duration: environment.poNotificationDuration,
 				})
 			} else {
 				this.poNotification.warning({
-					message: "Item não encontrado.",
+					message: 'Item não encontrado.',
 					duration: environment.poNotificationDuration,
 				})
 			}
@@ -456,12 +473,12 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	itemAlreadyExists(item: any): boolean {
-		const pedidoItems = this.pacoteForm.get("pacoteItems") as FormArray
+		const pedidoItems = this.pacoteForm.get('pacoteItems') as FormArray
 		return pedidoItems.controls.some((control) => control.value.id === item.id)
 	}
 
 	onChangePacoteTipo(event: any) {
-		console.log("Pacote tipo alterado:", event)
+		console.log('Pacote tipo alterado:', event)
 		this.pacoteForm.reset({
 			pacoteTipo: event,
 			pacoteItems: [],
@@ -470,15 +487,15 @@ export class PacoteEditComponent implements OnInit, OnDestroy {
 	}
 
 	onProdutoChange(event: any) {
-		if (!!this.pacoteForm.get("pedidoId").value) {
-			this.restService.get(`/pacotes/produto-info/${event}/${this.pacoteForm.get("pedidoId").value}`).subscribe({
+		if (!!this.pacoteForm.get('pedidoId').value) {
+			this.restService.get(`/pacotes/produto-info/${event}/${this.pacoteForm.get('pedidoId').value}`).subscribe({
 				next: (result) => {
 					this.pacoteItemsForm.patchValue({ quantidadeDisponivel: result.quantidadeDisponivel })
 				},
 				error: (error) => {
-					console.error("Erro ao buscar informações do produto:", error)
+					console.error('Erro ao buscar informações do produto:', error)
 					this.poNotification.error({
-						message: "Erro ao buscar informações do produto.",
+						message: 'Erro ao buscar informações do produto.',
 						duration: environment.poNotificationDuration,
 					})
 				},

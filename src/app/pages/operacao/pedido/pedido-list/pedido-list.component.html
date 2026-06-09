@@ -1,12 +1,7 @@
 <div>
 	<po-loading-overlay [hidden]="isHideLoading"></po-loading-overlay>
 </div>
-<app-custom-table
-	[pageTitle]="this.literals.title"
-	route="pedidos"
-	[initialFields]="initialFields"
-	[customPageActions]="customPageActions"
->
+<app-custom-table [pageTitle]="this.literals.title" route="pedidos" [initialFields]="initialFields" [customPageActions]="customPageActions" [removeMultiDeleteAction]="true">
 </app-custom-table>
 
 <app-import-excel-modal
@@ -35,13 +30,9 @@
 		<div class="modal-body">
 			<form [formGroup]="pedidoReturnForm">
 				<div formArrayName="itemsCriados">
-					<div
-						*ngFor="let item of itemsCriadosArray.controls; let i = index"
-						[formGroupName]="i"
-						class="item-form"
-					>
+					<div *ngFor="let item of itemsCriadosArray.controls; let i = index" [formGroupName]="i" class="item-form">
 						<div class="item-header">
-							<h4>{{ getItemValue(i, "produto") }}</h4>
+							<h4>{{ getItemValue(i, 'produto') }}</h4>
 						</div>
 						<div class="item-fields">
 							<div class="field-group">

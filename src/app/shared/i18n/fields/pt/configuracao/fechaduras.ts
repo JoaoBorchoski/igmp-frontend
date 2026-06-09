@@ -1,10 +1,14 @@
 export const fechadurasFields = {
-  list: {
-    nome: 'Nome',
-    descricao: 'Descrição',
-  },
-  form: {
-    nome: 'Nome',
-    descricao: 'Descrição',
-  }
+	list: {
+		descricao: 'Descrição',
+		placa: 'Placa',
+		motorista: 'Motorista',
+		confirmado: 'Confirmado',
+	},
+	form: {
+		descricao: 'Descrição',
+		placa: 'Placa',
+		motorista: 'Motorista',
+		confirmado: 'Confirmado',
+	},
 }

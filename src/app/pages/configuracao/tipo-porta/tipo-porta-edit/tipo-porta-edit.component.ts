@@ -1,25 +1,18 @@
-import { HttpClient } from "@angular/common/http"
-import { Component, OnDestroy, OnInit } from "@angular/core"
-import { ActivatedRoute, Router } from "@angular/router"
-import {
-	PoDynamicFormField,
-	PoPageAction,
-	PoNotificationService,
-	PoNotification,
-	PoLookupColumn,
-	PoTableAction,
-} from "@po-ui/ng-components"
-import { FormArray, FormBuilder } from "@angular/forms"
-import { Subscription, forkJoin } from "rxjs"
-import { environment } from "src/environments/environment"
-import { RestService } from "src/app/services/rest.service"
-import { LanguagesService } from "src/app/services/languages.service"
-import { ExcelService } from "src/app/services/excel.service"
+import { HttpClient } from '@angular/common/http'
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { PoDynamicFormField, PoPageAction, PoNotificationService, PoNotification, PoLookupColumn, PoTableAction } from '@po-ui/ng-components'
+import { FormArray, FormBuilder } from '@angular/forms'
+import { Subscription, forkJoin } from 'rxjs'
+import { environment } from 'src/environments/environment'
+import { RestService } from 'src/app/services/rest.service'
+import { LanguagesService } from 'src/app/services/languages.service'
+import { ExcelService } from 'src/app/services/excel.service'
 
 @Component({
-	selector: "app-tipo-porta-edit",
-	templateUrl: "./tipo-porta-edit.component.html",
-	styleUrls: ["./tipo-porta-edit.component.scss"],
+	selector: 'app-tipo-porta-edit',
+	templateUrl: './tipo-porta-edit.component.html',
+	styleUrls: ['./tipo-porta-edit.component.scss'],
 })
 export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	public id: string
@@ -33,51 +26,66 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	public pedidoPacotesIdService = `${environment.baseUrl}/pedidos/selectPacotes`
 	public produtoIdService = `${environment.baseUrl}/produtos/select`
 
-	columnsFornecedor: Array<PoLookupColumn> = [{ property: "label", label: "Pedido" }]
+	columnsFornecedor: Array<PoLookupColumn> = [{ property: 'label', label: 'Pedido' }]
 
 	tipoPortaForm = this.formBuilder.group({
-		pedidoId: "",
+		pedidoId: '',
 		pacoteId: [],
-		placa: "",
-		motorista: "",
-		lote: "",
-		descricao: "",
+		placa: '',
+		motorista: '',
+		lote: '',
+		descricao: '',
 		espelhoCargaItems: this.formBuilder.array([]),
 	})
 
 	public readonly columnsTableItems = [
-		{ property: "id", key: true, visible: false },
-		{ property: "descricao", label: "Descrição" },
+		{ property: 'id', key: true, visible: false },
+		{ property: 'descricao', label: 'Descrição' },
 		{
-			property: "confirmado",
-			label: "Carregado",
-			width: "10%",
-			type: "subtitle",
+			property: 'confirmado',
+			label: 'Carregado',
+			width: '10%',
+			type: 'subtitle',
 			subtitles: [
 				{
 					value: true,
-					color: "color-10",
-					label: "Sim",
-					content: "S",
+					color: 'color-10',
+					label: 'Sim',
+					content: 'S',
 				},
 				{
 					value: false,
-					color: "color-07",
-					label: "Não",
-					content: "N",
+					color: 'color-07',
+					label: 'Não',
+					content: 'N',
 				},
+			],
+		},
+		{
+			property: 'descarregado',
+			label: 'Descarregado',
+			width: '10%',
+			type: 'subtitle',
+			subtitles: [
+				{ value: true, color: 'color-10', label: 'Sim', content: 'S' },
+				{ value: false, color: 'color-07', label: 'Não', content: 'N' },
 			],
 		},
 	]
 
 	public readonly columnsTablePacoteItems = [
-		{ property: "id", key: true, visible: false },
-		{ property: "produto_nome", label: "Produto" },
-		{ property: "quantidade", label: "Quantidade", type: "number" },
+		{ property: 'id', key: true, visible: false },
+		{ property: 'produto_nome', label: 'Produto' },
+		{ property: 'quantidade', label: 'Quantidade', type: 'number' },
 	]
 
 	public tableActions: PoTableAction[] = [
-		{ label: "", action: this.removeItemTable.bind(this), icon: "fa-solid fa-trash" },
+		{
+			label: '',
+			action: this.removeItemTable.bind(this),
+			icon: 'fa-solid fa-trash',
+			disabled: (rowItem: any) => rowItem.confirmado === true,
+		},
 	]
 
 	subscriptions = new Subscription()
@@ -92,13 +100,13 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private poNotification: PoNotificationService,
 		private languagesService: LanguagesService,
-		private excelService: ExcelService
+		private excelService: ExcelService,
 	) {}
 
 	ngOnInit(): void {
 		this.getLiterals()
 
-		this.id = this.activatedRoute.snapshot.paramMap.get("id")
+		this.id = this.activatedRoute.snapshot.paramMap.get('id')
 
 		this.pageButtonsBuilder(this.getPageType(this.activatedRoute.snapshot.routeConfig.path))
 
@@ -108,37 +116,37 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	ngAfterViewInit(): void {
-		this.tableActions[0].disabled = this.editMode
-	}
+	// ngAfterViewInit(): void {
+	// 	this.tableActions[0].disabled = this.editMode
+	// }
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe()
 	}
 
 	getLiterals() {
-		this.languagesService.getLiterals({ type: "edit", module: "configuracao", options: "tipoPorta" }).subscribe({
+		this.languagesService.getLiterals({ type: 'edit', module: 'configuracao', options: 'tipoPorta' }).subscribe({
 			next: (res) => (this.literals = res),
 		})
 	}
 
 	getPageType(route: string): string {
 		switch (route) {
-			case "new":
-				return "new"
-			case "new/:id":
-				return "new"
-			case "edit":
-				return "edit"
-			case "edit/:id":
-				return "edit"
-			case "view/:id":
-				return "view"
+			case 'new':
+				return 'new'
+			case 'new/:id':
+				return 'new'
+			case 'edit':
+				return 'edit'
+			case 'edit/:id':
+				return 'edit'
+			case 'view/:id':
+				return 'view'
 		}
 	}
 
 	pageButtonsBuilder(pageType: string): null {
-		if (pageType === "view") {
+		if (pageType === 'view') {
 			this.readonly = true
 
 			this.pageActions.push({
@@ -160,7 +168,7 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 			{
 				label: this.literals.cancel,
 				action: this.goBack.bind(this),
-			}
+			},
 		)
 
 		return
@@ -169,7 +177,7 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	getTipoPorta(id: string) {
 		this.restService.get(`/espelhos-carga/${id}`).subscribe({
 			next: (result) => {
-				const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+				const espelhoCargaItems = this.tipoPortaForm.get('espelhoCargaItems') as FormArray
 				espelhoCargaItems.clear()
 
 				result.espelhoCargaItems?.forEach((pacote: any) => {
@@ -178,6 +186,7 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 							id: pacote.id,
 							descricao: pacote.descricao,
 							confirmado: pacote.confirmado,
+							descarregado: pacote.descarregado,
 							items: this.formBuilder.array(
 								pacote.items.map((item: any) =>
 									this.formBuilder.group({
@@ -185,10 +194,10 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 										produto: item.produto,
 										produto_nome: item.produto_nome,
 										quantidade: item.quantidade,
-									})
-								)
+									}),
+								),
 							),
-						})
+						}),
 					)
 				})
 
@@ -206,14 +215,14 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 
 	save(data, willCreateAnother?: boolean) {
 		if (this.tipoPortaForm.valid) {
-			if (this.tipoPortaForm.get("espelhoCargaItems").value.length === 0) {
+			if (this.tipoPortaForm.get('espelhoCargaItems').value.length === 0) {
 				this.poNotification.warning({
-					message: "Nenhum pacote selecionado",
+					message: 'Nenhum pacote selecionado',
 					duration: environment.poNotificationDuration,
 				})
 				return
 			}
-			if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === "edit") {
+			if (this.id && this.getPageType(this.activatedRoute.snapshot.routeConfig.path) === 'edit') {
 				this.subscriptions.add(
 					this.restService.put(`/espelhos-carga/${this.id}`, data).subscribe({
 						next: () => {
@@ -224,17 +233,23 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 
 							if (willCreateAnother) {
 								this.tipoPortaForm.reset()
-								this.router.navigate(["espelhos-carga/new"])
+								this.router.navigate(['espelhos-carga/new'])
 							} else {
-								this.router.navigate(["espelhos-carga"])
+								this.router.navigate(['espelhos-carga'])
 							}
 						},
 						error: (error) => console.log(error),
-					})
+					}),
 				)
 			} else {
+				const bodySize = new Blob([JSON.stringify(data)]).size
+
+				console.log('Tamanho do body (bytes):', bodySize)
+				console.log('Tamanho do body (KB):', (bodySize / 1024).toFixed(2))
+				console.log('Tamanho do body (MB):', (bodySize / 1024 / 1024).toFixed(2))
+
 				this.subscriptions.add(
-					this.restService.post("/espelhos-carga", data).subscribe({
+					this.restService.post('/espelhos-carga', data).subscribe({
 						next: () => {
 							this.poNotification.success({
 								message: this.literals.saveSuccess,
@@ -243,13 +258,13 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 
 							if (willCreateAnother) {
 								this.tipoPortaForm.reset()
-								this.router.navigate(["espelhos-carga/new"])
+								this.router.navigate(['espelhos-carga/new'])
 							} else {
-								this.router.navigate(["espelhos-carga"])
+								this.router.navigate(['espelhos-carga'])
 							}
 						},
 						error: (error) => console.log(error),
-					})
+					}),
 				)
 			}
 		} else {
@@ -270,14 +285,14 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	}
 
 	goBack() {
-		this.router.navigate(["tipos-porta"])
+		this.router.navigate(['tipos-porta'])
 	}
 
 	adicionarPacotes() {
-		const pacoteIds = this.tipoPortaForm.get("pacoteId").value
+		const pacoteIds = this.tipoPortaForm.get('pacoteId').value
 
 		if (!pacoteIds || pacoteIds.length === 0) {
-			console.log("Nenhum pacote selecionado")
+			console.log('Nenhum pacote selecionado')
 			return
 		}
 
@@ -285,7 +300,7 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 
 		forkJoin(requests).subscribe({
 			next: (pacotes) => {
-				const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+				const espelhoCargaItems = this.tipoPortaForm.get('espelhoCargaItems') as FormArray
 				pacotes.forEach((pacote: any) => {
 					if (espelhoCargaItems.value.some((item: any) => item.id === pacote.id)) {
 						return
@@ -294,8 +309,9 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 							this.formBuilder.group({
 								id: pacote.id,
 								descricao: pacote.descricao,
+								confirmado: false,
 								items: this.formBuilder.array(this.getPacoteItems(pacote)),
-							})
+							}),
 						)
 					}
 				})
@@ -320,27 +336,27 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 	}
 
 	hasItems = (rowItem: any): boolean => {
-		const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+		const espelhoCargaItems = this.tipoPortaForm.get('espelhoCargaItems') as FormArray
 		const pacoteIndex = espelhoCargaItems.value.findIndex((item: any) => item.id === rowItem.id)
 		if (pacoteIndex === -1) return false
 
 		const pacoteFormGroup = espelhoCargaItems.at(pacoteIndex)
-		const items = pacoteFormGroup.get("items") as FormArray
+		const items = pacoteFormGroup.get('items') as FormArray
 		return items && items.length > 0
 	}
 
 	getPacoteItemsArray = (rowItem: any): any[] => {
-		const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+		const espelhoCargaItems = this.tipoPortaForm.get('espelhoCargaItems') as FormArray
 		const pacoteIndex = espelhoCargaItems.value.findIndex((item: any) => item.id === rowItem.id)
 		if (pacoteIndex === -1) return []
 
 		const pacoteFormGroup = espelhoCargaItems.at(pacoteIndex)
-		const items = pacoteFormGroup.get("items") as FormArray
+		const items = pacoteFormGroup.get('items') as FormArray
 		return items ? items.value : []
 	}
 
 	removeItemTable(rowItem: any) {
-		const espelhoCargaItems = this.tipoPortaForm.get("espelhoCargaItems") as FormArray
+		const espelhoCargaItems = this.tipoPortaForm.get('espelhoCargaItems') as FormArray
 		const index = espelhoCargaItems.value.findIndex((item: any) => item.id === rowItem.id)
 		if (index > -1) {
 			espelhoCargaItems.removeAt(index)
@@ -352,14 +368,14 @@ export class TipoPortaEditComponent implements OnInit, OnDestroy {
 			next: (result) => {
 				this.excelService.createDownloadPdf(
 					result,
-					`registro-embarque-${new Date().toLocaleTimeString("pt-BR", {
-						hour: "2-digit",
-						minute: "2-digit",
-					})}-${new Date().toLocaleDateString("pt-BR", {
-						year: "numeric",
-						month: "2-digit",
-						day: "2-digit",
-					})}`
+					`registro-embarque-${new Date().toLocaleTimeString('pt-BR', {
+						hour: '2-digit',
+						minute: '2-digit',
+					})}-${new Date().toLocaleDateString('pt-BR', {
+						year: 'numeric',
+						month: '2-digit',
+						day: '2-digit',
+					})}`,
 				)
 			},
 			error: (error) => console.log(error),

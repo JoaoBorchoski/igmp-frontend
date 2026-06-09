@@ -1,5 +1,5 @@
 export const environment = {
-    production: true,
-    baseUrl: "https://igmp-backend-production.up.railway.app",
-    poNotificationDuration: 4000,
+	production: true,
+	baseUrl: 'https://api.igmp.com.br',
+	poNotificationDuration: 4000,
 }
